@@ -1,33 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useRef, useState } from "react";
 
-const FIELDS = [
-  { name: "stripe", label: "Stripe", accept: ".csv,text/csv", logo: "/logos/stripe.svg" },
-  { name: "gumroad", label: "Gumroad", accept: ".csv,text/csv", logo: "/logos/gumroad.svg" },
-  { name: "dodo", label: "Dodo Payments", accept: ".json,application/json", logo: "/logos/dodo.webp" },
-  { name: "bank", label: "Bank", accept: ".csv,text/csv", logo: "/logos/chase.svg" },
+const LOGOS = [
+  { src: "/logos/stripe.svg", alt: "Stripe" },
+  { src: "/logos/gumroad.svg", alt: "Gumroad" },
+  { src: "/logos/dodo.webp", alt: "Dodo Payments" },
+  { src: "/logos/chase.svg", alt: "Chase" },
 ] as const;
 
 export function ImportPanel() {
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<Record<string, string>>({});
+  const [names, setNames] = useState<string[]>([]);
 
-  async function onSubmit(formEvent: FormEvent<HTMLFormElement>) {
-    formEvent.preventDefault();
-    const form = new FormData(formEvent.currentTarget);
-    const hasFile = FIELDS.some((field) => {
-      const value = form.get(field.name);
-      return value instanceof File && value.size > 0;
-    });
-    if (!hasFile) {
-      setError("Choose at least one file.");
-      return;
+  async function upload(fileList: FileList | null) {
+    if (!fileList || fileList.length === 0) return;
+    const form = new FormData();
+    const picked: string[] = [];
+    for (const file of Array.from(fileList)) {
+      form.append("files", file);
+      picked.push(file.name);
     }
-
+    setNames(picked);
     setState("loading");
     setError(null);
     const response = await fetch("/api/import", { method: "POST", body: form });
@@ -38,55 +36,45 @@ export function ImportPanel() {
       return;
     }
     setState("idle");
-    setSelected({});
-    formEvent.currentTarget.reset();
     router.refresh();
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4 border border-black/15 bg-white p-6">
-      <div>
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Import</p>
-        <h2 className="mt-1 text-2xl font-semibold tracking-tight">Upload source files</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Stripe, Gumroad, and bank take CSV. Dodo takes JSON, or POST to{" "}
-          <code className="font-mono text-xs">/api/webhooks/dodo</code>.
-        </p>
-      </div>
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        {FIELDS.map((field) => (
-          <label key={field.name} className="flex min-h-16 flex-col justify-center gap-2 border border-black/10 px-3 py-3">
-            <span className="flex items-center gap-2 text-sm font-medium">
-              <img src={field.logo} alt="" className="h-4 w-auto" />
-              {field.label}
-            </span>
-            <input
-              type="file"
-              name={field.name}
-              accept={field.accept}
-              className="text-sm file:mr-3 file:min-h-10 file:border file:border-black/15 file:bg-secondary file:px-3 file:text-sm focus-visible:ring-2 focus-visible:ring-ring"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                setSelected((current) => ({ ...current, [field.name]: file?.name ?? "" }));
-              }}
-            />
-            {selected[field.name] ? (
-              <span className="font-mono text-[11px] text-muted-foreground">{selected[field.name]}</span>
-            ) : null}
-          </label>
-        ))}
-      </div>
-
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
-
+    <div className="border border-black/15 bg-white p-6">
       <button
-        type="submit"
+        type="button"
+        onClick={() => inputRef.current?.click()}
         disabled={state === "loading"}
-        className="inline-flex min-h-10 w-fit items-center bg-primary px-4 text-sm font-medium text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+        className="flex w-full flex-col items-center gap-5 py-4 focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
       >
-        {state === "loading" ? "Importing…" : "Import files"}
+        <ul className="flex items-center">
+          {LOGOS.map((logo, index) => (
+            <li
+              key={logo.src}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white"
+              style={{ marginLeft: index === 0 ? 0 : -12, zIndex: LOGOS.length - index }}
+            >
+              <img src={logo.src} alt={logo.alt} className="h-5 w-auto max-w-[1.75rem]" />
+            </li>
+          ))}
+        </ul>
+        <span className="text-sm font-medium">{state === "loading" ? "Importing…" : "Upload"}</span>
+        {names.length > 0 ? (
+          <span className="font-mono text-[11px] text-muted-foreground">{names.join(" · ")}</span>
+        ) : null}
       </button>
-    </form>
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".csv,.json,text/csv,application/json"
+        multiple
+        className="sr-only"
+        onChange={(event) => {
+          void upload(event.target.files);
+          event.target.value = "";
+        }}
+      />
+      {error ? <p className="mt-3 text-center text-sm text-destructive">{error}</p> : null}
+    </div>
   );
 }
