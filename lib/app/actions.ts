@@ -72,12 +72,7 @@ export async function importUploads(files: {
     incoming.invalidRows.push(...parsed.invalidRows);
   }
 
-  const existing = await listEvents();
-  const existingInvalid = await listInvalidRows();
-  await replaceEvents(
-    [...existing.filter((event) => !replaced.has(event.source)), ...incoming.events],
-    [...existingInvalid.filter((row) => !replaced.has(row.source)), ...incoming.invalidRows],
-  );
+  await replaceEvents(incoming.events, incoming.invalidRows);
 
   return {
     eventCount: incoming.events.length,
