@@ -1,7 +1,7 @@
 const sources = [
   { src: "/logos/stripe.svg", alt: "Stripe" },
   { src: "/logos/gumroad.svg", alt: "Gumroad" },
-  { src: "/logos/dodo.svg", alt: "Dodo Payments" },
+  { src: "/logos/dodo.webp", alt: "Dodo Payments" },
   { src: "/logos/chase.svg", alt: "Chase" },
 ] as const;
 
@@ -30,7 +30,7 @@ export function LandingHero() {
                   <ul className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
                     {sources.map((source) => (
                       <li key={source.src} className="how-check">
-                        <img src={source.src} alt={source.alt} className="h-5 w-auto" />
+                        <img src={source.src} alt={source.alt} className="h-6 w-auto" />
                       </li>
                     ))}
                   </ul>
