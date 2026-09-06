@@ -1,0 +1,36 @@
+drift_id,type,amount,currency,fee,net,charge_id,parent_charge_id,payout_id,created,description
+evt_sale_june_1000,sale,1000.00,usd,29.20,970.80,ch_june_1000,,po_july_cross,2026-06-12T15:04:00Z,June creator workshop
+evt_fee_june_1000,fee,29.20,usd,,,fee_june_1000,ch_june_1000,po_july_cross,2026-06-12T15:04:10Z,Stripe fee
+evt_sale_june_80,sale,80.00,usd,2.62,77.38,ch_june_80,,po_june_multi,2026-06-08T11:20:00Z,Template pack
+evt_fee_june_80,fee,2.62,usd,,,fee_june_80,ch_june_80,po_june_multi,2026-06-08T11:20:10Z,Stripe fee
+evt_sale_june_120,sale,120.00,usd,3.78,116.22,ch_june_120,,po_june_multi,2026-06-09T09:10:00Z,Notion kit
+evt_fee_june_120,fee,3.78,usd,,,fee_june_120,ch_june_120,po_june_multi,2026-06-09T09:10:10Z,Stripe fee
+evt_sale_sub_june,sale,29.00,usd,1.14,27.86,ch_sub_june,,po_june_multi,2026-06-15T08:00:00Z,Pro subscription
+evt_fee_sub_june,fee,1.14,usd,,,fee_sub_june,ch_sub_june,po_june_multi,2026-06-15T08:00:10Z,Stripe fee
+evt_sale_eur_200,sale,200.00,eur,6.10,193.90,ch_eur_200,,po_july_fx,2026-06-20T14:00:00Z,EU workshop
+evt_fee_eur_200,fee,6.10,eur,,,fee_eur_200,ch_eur_200,po_july_fx,2026-06-20T14:00:10Z,Stripe fee
+evt_fx_eur_usd,fx_conversion,209.41,usd,,,fx_eur_200,ch_eur_200,po_july_fx,2026-07-18T12:00:00Z,EUR to USD conversion
+evt_refund_july_200,refund,200.00,usd,,,re_july_200,ch_june_1000,po_july_cross,2026-07-03T16:22:00Z,Partial refund June workshop
+evt_sale_july_150,sale,150.00,usd,4.65,145.35,ch_july_150,,po_july_ops,2026-07-02T10:00:00Z,July cohort
+evt_fee_july_150,fee,4.65,usd,,,fee_july_150,ch_july_150,po_july_ops,2026-07-02T10:00:10Z,Stripe fee
+evt_refund_partial_30,refund,30.00,usd,,,re_july_30,ch_july_150,po_july_ops,2026-07-06T13:40:00Z,Partial refund July cohort
+evt_sale_july_90,sale,90.00,usd,2.91,87.09,ch_july_90,,po_july_ops,2026-07-04T11:15:00Z,Clip pack
+evt_fee_july_90,fee,2.91,usd,,,fee_july_90,ch_july_90,po_july_ops,2026-07-04T11:15:10Z,Stripe fee
+evt_dispute_50,dispute,50.00,usd,,,dp_july_50,ch_july_150,po_july_ops,2026-07-11T09:00:00Z,Dispute July cohort
+evt_chargeback_40,chargeback,40.00,usd,,,cb_july_40,ch_july_90,po_july_ops,2026-07-14T17:30:00Z,Chargeback clip pack
+evt_sale_sub_july,sale,29.00,usd,1.14,27.86,ch_sub_july,,po_july_ops,2026-07-15T08:00:00Z,Pro subscription
+evt_fee_sub_july,fee,1.14,usd,,,fee_sub_july,ch_sub_july,po_july_ops,2026-07-15T08:00:10Z,Stripe fee
+evt_sale_ident_a,sale,50.00,usd,1.75,48.25,ch_ident_a,,po_july_ops,2026-07-10T18:00:00Z,Same-day workshop A
+evt_fee_ident_a,fee,1.75,usd,,,fee_ident_a,ch_ident_a,po_july_ops,2026-07-10T18:00:10Z,Stripe fee
+evt_sale_ident_b,sale,50.00,usd,1.75,48.25,ch_ident_b,,po_july_ops,2026-07-10T18:05:00Z,Same-day workshop B
+evt_fee_ident_b,fee,1.75,usd,,,fee_ident_b,ch_ident_b,po_july_ops,2026-07-10T18:05:10Z,Stripe fee
+evt_refund_ident,refund,50.00,usd,,,re_ident_50,,,2026-07-12T12:00:00Z,Refund missing parent
+evt_sale_noref,sale,25.00,usd,,,,,,2026-07-08T12:00:00Z,Sale missing references
+evt_sale_unbal,sale,100.00,usd,3.20,96.80,ch_unbal,,po_unbal,2026-07-21T09:00:00Z,Unbalanced source sale
+evt_fee_unbal,fee,3.20,usd,,,fee_unbal,ch_unbal,po_unbal,2026-07-21T09:00:10Z,Stripe fee
+evt_payout_june_multi,payout,221.46,usd,,,po_june_multi,,,2026-06-28T20:00:00Z,Stripe payout June multi
+evt_payout_july_cross,payout,770.80,usd,,,po_july_cross,,,2026-07-15T20:00:00Z,Stripe payout cross-period
+evt_payout_july_fx,payout,209.41,usd,,,po_july_fx,,,2026-07-20T20:00:00Z,Stripe payout FX
+evt_payout_july_ops,payout,236.80,usd,,,po_july_ops,,,2026-07-25T20:00:00Z,Stripe payout ops
+evt_payout_unbal,payout,98.00,usd,,,po_unbal,,,2026-07-22T20:00:00Z,Unbalanced payout
+evt_invalid_blank,sale,,usd,,,ch_invalid,,,2026-07-19T12:00:00Z,Invalid row missing amount

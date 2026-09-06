@@ -1,0 +1,5 @@
+drift_id,type,amount,currency,fee,net,sale_id,parent_ref,payout_id,created_at,product,email
+evt_sale_gum_45,sale,45.00,usd,4.50,40.50,gum_45,,po_june_gum,2026-06-11T13:00:00Z,Acme preset pack,buyer@example.com
+evt_fee_gum_45,fee,4.50,usd,,,gum_fee_45,gum_45,po_june_gum,2026-06-11T13:00:10Z,Gumroad fee,buyer@example.com
+evt_sale_gum_dup,sale,45.00,usd,4.50,40.50,gum_45,,,2026-06-11T13:00:00Z,Acme preset pack,buyer@example.com
+evt_payout_gum,payout,40.50,usd,,,po_june_gum,,,2026-06-29T19:00:00Z,Gumroad payout,

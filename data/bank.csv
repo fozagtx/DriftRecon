@@ -1,0 +1,10 @@
+drift_id,date,amount,currency,description,reference,payout_ref
+evt_bank_june_multi,2026-06-30T08:00:00Z,221.46,usd,STRIPE PAYOUT po_june_multi,po_june_multi,po_june_multi
+evt_bank_gum,2026-06-30T08:10:00Z,40.50,usd,GUMROAD PAYOUT po_june_gum,po_june_gum,po_june_gum
+evt_bank_dodo_june,2026-06-28T08:00:00Z,58.20,usd,DODO PAYOUT po_dodo_june,po_dodo_june,po_dodo_june
+evt_bank_july_cross,2026-07-16T08:00:00Z,770.80,usd,STRIPE PAYOUT po_july_cross,po_july_cross,po_july_cross
+evt_bank_july_fx,2026-07-21T08:00:00Z,209.41,usd,STRIPE PAYOUT po_july_fx,po_july_fx,po_july_fx
+evt_bank_july_ops,2026-07-26T08:00:00Z,236.80,usd,STRIPE PAYOUT po_july_ops,po_july_ops,po_july_ops
+evt_bank_dodo_july,2026-07-28T08:00:00Z,15.77,usd,DODO PAYOUT po_dodo_july,po_dodo_july,po_dodo_july
+evt_bank_unbal,2026-07-23T08:00:00Z,98.00,usd,STRIPE PAYOUT po_unbal,po_unbal,po_unbal
+evt_bank_unmatched,2026-07-18T08:00:00Z,500.00,usd,WIRE IN ACME UNKNOWN,wire_acme_500,

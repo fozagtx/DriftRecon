@@ -1,0 +1,193 @@
+import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
+import type {
+  ExceptionRecord,
+  GroundTruthEdge,
+  HumanDecision,
+  InvalidRow,
+  LedgerEvent,
+  MatchEdge,
+  ReconciliationPolicy,
+  ReconciliationRun,
+} from "../types";
+
+type Sql = NeonQueryFunction<false, false>;
+
+let sql: Sql | null = null;
+let schemaReady = false;
+
+function getSql(): Sql {
+  if (sql) return sql;
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL is required. Use the Neon pooled connection string.");
+  }
+  sql = neon(url);
+  return sql;
+}
+
+async function ensureSchema(): Promise<Sql> {
+  const client = getSql();
+  if (schemaReady) return client;
+  await client`CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS invalid_rows (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS edges (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS exceptions (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS policies (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS decisions (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  schemaReady = true;
+  return client;
+}
+
+async function writeAll(table: "events" | "invalid_rows" | "edges" | "exceptions" | "policies" | "decisions" | "runs", rows: Array<{ id: string }>): Promise<void> {
+  const client = await ensureSchema();
+  switch (table) {
+    case "events":
+      await client`DELETE FROM events`;
+      break;
+    case "invalid_rows":
+      await client`DELETE FROM invalid_rows`;
+      break;
+    case "edges":
+      await client`DELETE FROM edges`;
+      break;
+    case "exceptions":
+      await client`DELETE FROM exceptions`;
+      break;
+    case "policies":
+      await client`DELETE FROM policies`;
+      break;
+    case "decisions":
+      await client`DELETE FROM decisions`;
+      break;
+    case "runs":
+      await client`DELETE FROM runs`;
+      break;
+  }
+  for (const row of rows) {
+    await upsertRow(table, row.id, row);
+  }
+}
+
+async function upsertRow(table: string, id: string, payload: unknown): Promise<void> {
+  const client = await ensureSchema();
+  const body = payload as Record<string, unknown>;
+  switch (table) {
+    case "events":
+      await client`INSERT INTO events (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
+    case "invalid_rows":
+      await client`INSERT INTO invalid_rows (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
+    case "edges":
+      await client`INSERT INTO edges (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
+    case "exceptions":
+      await client`INSERT INTO exceptions (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
+    case "policies":
+      await client`INSERT INTO policies (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
+    case "decisions":
+      await client`INSERT INTO decisions (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
+    case "runs":
+      await client`INSERT INTO runs (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
+    default:
+      throw new Error(`Unknown table ${table}`);
+  }
+}
+
+async function readAll<T>(table: "events" | "invalid_rows" | "edges" | "exceptions" | "policies" | "decisions"): Promise<T[]> {
+  const client = await ensureSchema();
+  const rows =
+    table === "events"
+      ? await client`SELECT payload FROM events`
+      : table === "invalid_rows"
+        ? await client`SELECT payload FROM invalid_rows`
+        : table === "edges"
+          ? await client`SELECT payload FROM edges`
+          : table === "exceptions"
+            ? await client`SELECT payload FROM exceptions`
+            : table === "policies"
+              ? await client`SELECT payload FROM policies`
+              : await client`SELECT payload FROM decisions`;
+  return rows.map((row) => row.payload as T);
+}
+
+export async function replaceEvents(events: LedgerEvent[], invalidRows: InvalidRow[]): Promise<void> {
+  await writeAll("events", events);
+  await writeAll("invalid_rows", invalidRows);
+}
+
+export async function listEvents(): Promise<LedgerEvent[]> {
+  return readAll<LedgerEvent>("events");
+}
+
+export async function listInvalidRows(): Promise<InvalidRow[]> {
+  return readAll<InvalidRow>("invalid_rows");
+}
+
+export async function upsertEvent(event: LedgerEvent): Promise<void> {
+  await upsertRow("events", event.id, event);
+}
+
+export async function replaceGraph(edges: MatchEdge[], exceptions: ExceptionRecord[], run: ReconciliationRun): Promise<void> {
+  await writeAll("edges", edges);
+  await writeAll("exceptions", exceptions);
+  await upsertRow("runs", run.id, run);
+  const client = await ensureSchema();
+  await client`INSERT INTO meta (key, payload) VALUES ('latest_run', ${run as unknown as Record<string, unknown>}) ON CONFLICT (key) DO UPDATE SET payload = EXCLUDED.payload`;
+}
+
+export async function listEdges(): Promise<MatchEdge[]> {
+  return readAll<MatchEdge>("edges");
+}
+
+export async function listExceptions(): Promise<ExceptionRecord[]> {
+  return readAll<ExceptionRecord>("exceptions");
+}
+
+export async function listPolicies(): Promise<ReconciliationPolicy[]> {
+  return readAll<ReconciliationPolicy>("policies");
+}
+
+export async function listDecisions(): Promise<HumanDecision[]> {
+  return readAll<HumanDecision>("decisions");
+}
+
+export async function savePolicy(policy: ReconciliationPolicy): Promise<void> {
+  await upsertRow("policies", policy.id, policy);
+}
+
+export async function saveDecision(decision: HumanDecision): Promise<void> {
+  await upsertRow("decisions", decision.id, decision);
+}
+
+export async function latestRun(): Promise<ReconciliationRun | null> {
+  const client = await ensureSchema();
+  const rows = await client`SELECT payload FROM meta WHERE key = 'latest_run'`;
+  return rows[0] ? (rows[0].payload as ReconciliationRun) : null;
+}
+
+export async function saveGroundTruth(edges: GroundTruthEdge[]): Promise<void> {
+  const client = await ensureSchema();
+  const payload = { items: edges };
+  await client`INSERT INTO meta (key, payload) VALUES ('ground_truth', ${payload}) ON CONFLICT (key) DO UPDATE SET payload = EXCLUDED.payload`;
+}
+
+export async function loadGroundTruth(): Promise<GroundTruthEdge[]> {
+  const client = await ensureSchema();
+  const rows = await client`SELECT payload FROM meta WHERE key = 'ground_truth'`;
+  const payload = rows[0]?.payload as { items?: GroundTruthEdge[] } | GroundTruthEdge[] | undefined;
+  if (!payload) return [];
+  return Array.isArray(payload) ? payload : (payload.items ?? []);
+}
+
+export async function resetPredictions(): Promise<void> {
+  const client = await ensureSchema();
+  await client`DELETE FROM edges`;
+  await client`DELETE FROM exceptions`;
+}

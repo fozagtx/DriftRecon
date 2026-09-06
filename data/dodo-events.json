@@ -1,0 +1,108 @@
+[
+  {
+    "type": "payment.succeeded",
+    "data": {
+      "drift_id": "evt_sale_dodo_60",
+      "id": "pay_dodo_60",
+      "payment_id": "pay_dodo_60",
+      "amount": "60.00",
+      "fee": "1.80",
+      "net_amount": "58.20",
+      "currency": "usd",
+      "created_at": "2026-06-14T12:00:00Z",
+      "payout_id": "po_dodo_june",
+      "description": "Dodo digital download"
+    }
+  },
+  {
+    "type": "fee",
+    "data": {
+      "drift_id": "evt_fee_dodo_60",
+      "id": "fee_dodo_60",
+      "amount": "1.80",
+      "currency": "usd",
+      "created_at": "2026-06-14T12:00:10Z",
+      "parent_ref": "pay_dodo_60",
+      "payout_id": "po_dodo_june",
+      "description": "Dodo fee"
+    }
+  },
+  {
+    "type": "payout.success",
+    "data": {
+      "drift_id": "evt_payout_dodo",
+      "payout_id": "po_dodo_june",
+      "id": "po_dodo_june",
+      "amount": "58.20",
+      "currency": "usd",
+      "created_at": "2026-06-27T18:00:00Z",
+      "description": "Dodo June payout"
+    }
+  },
+  {
+    "type": "payment.succeeded",
+    "data": {
+      "drift_id": "evt_sale_dodo_35",
+      "id": "pay_dodo_35",
+      "payment_id": "pay_dodo_35",
+      "amount": "35.00",
+      "fee": "1.23",
+      "net_amount": "33.77",
+      "currency": "usd",
+      "created_at": "2026-06-16T12:00:00Z",
+      "payout_id": "po_dodo_july",
+      "description": "Dodo course add-on"
+    }
+  },
+  {
+    "type": "fee",
+    "data": {
+      "drift_id": "evt_fee_dodo_35",
+      "id": "fee_dodo_35",
+      "amount": "1.23",
+      "currency": "usd",
+      "created_at": "2026-06-16T12:00:10Z",
+      "parent_ref": "pay_dodo_35",
+      "payout_id": "po_dodo_july",
+      "description": "Dodo fee"
+    }
+  },
+  {
+    "type": "refund.succeeded",
+    "data": {
+      "drift_id": "evt_refund_dodo_10",
+      "refund_id": "ref_dodo_10",
+      "payment_id": "pay_dodo_35",
+      "amount": "10.00",
+      "currency": "usd",
+      "created_at": "2026-07-05T12:00:00Z",
+      "payout_id": "po_dodo_july",
+      "description": "Dodo partial refund"
+    }
+  },
+  {
+    "type": "dispute.lost",
+    "data": {
+      "drift_id": "evt_dispute_dodo",
+      "dispute_id": "dp_dodo_08",
+      "payment_id": "pay_dodo_35",
+      "amount": "8.00",
+      "currency": "usd",
+      "created_at": "2026-07-09T12:00:00Z",
+      "payout_id": "po_dodo_july",
+      "description": "Dodo dispute"
+    }
+  },
+  {
+    "type": "payout.success",
+    "data": {
+      "drift_id": "evt_payout_dodo_july",
+      "payout_id": "po_dodo_july",
+      "id": "po_dodo_july",
+      "amount": "15.77",
+      "currency": "usd",
+      "created_at": "2026-07-27T18:00:00Z",
+      "description": "Dodo July payout"
+    }
+  }
+]
