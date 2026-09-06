@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function LandingHero() {
@@ -15,7 +16,14 @@ export function LandingHero() {
           </h1>
 
           <div className="reveal reveal-2 relative mx-auto mt-10 min-h-[280px] max-w-3xl sm:min-h-[340px]">
-            <WireCoin />
+            <Image
+              src="/brand/mark.svg"
+              alt="DRIF"
+              width={280}
+              height={280}
+              className="mx-auto h-[220px] w-[220px] sm:h-[280px] sm:w-[280px]"
+              priority
+            />
 
             <div className="absolute left-0 top-6 w-[46%] max-w-[220px] space-y-2 sm:top-10">
               <DataPlate label="Transaction id" value="ch_8f21a9c0" />
@@ -70,29 +78,3 @@ function DataPlate({ label, value }: { label: string; value: string }) {
   );
 }
 
-function WireCoin() {
-  return (
-    <svg
-      viewBox="0 0 420 280"
-      className="mx-auto h-[240px] w-full text-black/35 sm:h-[300px]"
-      aria-hidden
-    >
-      <ellipse cx="210" cy="148" rx="118" ry="118" fill="none" stroke="currentColor" strokeWidth="1.2" />
-      <ellipse cx="210" cy="148" rx="88" ry="88" fill="none" stroke="currentColor" strokeWidth="1" />
-      {Array.from({ length: 18 }, (_, i) => {
-        const y = 40 + i * 12;
-        const r = 118;
-        const dy = y - 148;
-        if (Math.abs(dy) >= r) return null;
-        const half = Math.sqrt(r * r - dy * dy);
-        return <line key={y} x1={210 - half} y1={y} x2={210 + half} y2={y} stroke="currentColor" strokeWidth="0.8" />;
-      })}
-      <path
-        d="M198 108h28c14 0 22 8 22 18 0 8-5 14-13 17 10 3 16 10 16 19 0 13-10 20-26 20h-27V108Z"
-        fill="none"
-        stroke="#111"
-        strokeWidth="2.4"
-      />
-    </svg>
-  );
-}

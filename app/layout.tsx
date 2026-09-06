@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   title: "DriftRecon",
   description: "Reconcile payment events to bank deposits.",
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/icon.svg" }],
+    icon: [{ url: "/brand/mark.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/brand/mark.svg" }],
   },
 };
 

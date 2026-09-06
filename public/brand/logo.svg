@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 160" fill="none" role="img" aria-label="DRIF">
+  <g transform="translate(0 8) scale(0.28)">
+    <rect width="512" height="512" rx="112" fill="#1A1A1C"/>
+    <path
+      fill="#ECECE8"
+      d="M156 128h124c76 0 128 50 128 128s-52 128-128 128H156V128zm56 52v152h68c42 0 70-30 70-76s-28-76-70-76h-68z"
+    />
+    <g transform="translate(256 248) rotate(-39.05)">
+      <rect x="-198" y="-28" width="396" height="56" rx="28" fill="#0C0C0D"/>
+      <rect x="-198" y="-12" width="396" height="24" rx="12" fill="#D89B3A"/>
+    </g>
+  </g>
+  <g fill="#111111" transform="translate(168 16)">
+    <path d="M0 16h78c49 0 82 32 82 80s-33 80-82 80H0V16zm36 33v94h42c27 0 45-19 45-47s-18-47-45-47H36z"/>
+    <path d="M198 16h70c44 0 74 26 74 66 0 30-16 52-44 60l54 66h-42l-50-62h-26v62h-36V16zm36 32v50h32c22 0 36-12 36-25s-14-25-36-25h-32z"/>
+    <path d="M400 16h36v160h-36V16z"/>
+    <path d="M476 16h118v33h-82v43h74v32h-74v52h-36V16z"/>
+  </g>
+</svg>

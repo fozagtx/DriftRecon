@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandMark } from "@/components/brand-mark";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
 
@@ -14,9 +15,7 @@ export function SiteNav({ launch }: { launch?: boolean }) {
   return (
     <header className="relative z-20">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="text-[1.35rem] font-semibold tracking-tight">
-          DriftRecon
-        </Link>
+        <BrandMark size="md" />
 
         <div className="flex items-center gap-3 sm:gap-5">
           <Menu as="div" className="relative">
