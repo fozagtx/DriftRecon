@@ -143,12 +143,59 @@ body {
   animation-delay: 270ms;
 }
 
+.flow-step {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgb(17 17 17 / 0.1);
+  opacity: 0.35;
+  animation: flow-on 4.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.flow-step:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.flow-step:nth-child(2) {
+  animation-delay: 1.2s;
+}
+
+.flow-step:nth-child(3) {
+  animation-delay: 2.4s;
+}
+
+.flow-step:nth-child(4) {
+  animation-delay: 3.6s;
+}
+
+@keyframes flow-on {
+  0%,
+  18% {
+    opacity: 0.35;
+    background: transparent;
+  }
+  22%,
+  40% {
+    opacity: 1;
+    background: #f7faf2;
+  }
+  48%,
+  100% {
+    opacity: 0.35;
+    background: transparent;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-2,
   .reveal-3,
-  .reveal-4 {
+  .reveal-4,
+  .flow-step {
     animation: none;
+    opacity: 1;
   }
 
   *,
