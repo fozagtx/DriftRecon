@@ -15,13 +15,19 @@ type Sql = NeonQueryFunction<false, false>;
 let sql: Sql | null = null;
 let schemaReady = false;
 
-function getSql(): Sql {
-  if (sql) return sql;
+function databaseUrl(): string {
   const url = process.env.DATABASE_URL;
   if (!url) {
     throw new Error("DATABASE_URL is required. Use the Neon pooled connection string.");
   }
-  sql = neon(url);
+  const parsed = new URL(url);
+  parsed.searchParams.delete("channel_binding");
+  return parsed.toString();
+}
+
+function getSql(): Sql {
+  if (sql) return sql;
+  sql = neon(databaseUrl());
   return sql;
 }
 

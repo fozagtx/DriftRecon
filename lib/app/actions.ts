@@ -157,42 +157,73 @@ export async function ingestDodoEvent(payload: unknown) {
   return result;
 }
 
-export async function snapshot() {
-  const events = await listEvents();
-  const edges = await listEdges();
-  const exceptions = await listExceptions();
-  const policies = await listPolicies();
-  const invalidRows = await listInvalidRows();
-  const truth = await loadGroundTruth();
-  const metrics = overviewMetrics(events, edges, exceptions);
-  const drift = evaluatePredictions(
-    edges,
-    truth,
-    events,
-    exceptions.filter((item) => item.status === "open").length,
-  );
-  const baseline = evaluatePredictions(
-    runBaseline(events),
-    truth,
-    events,
-    0,
-  );
+const emptyEvaluation = {
+  precision: 0,
+  recall: 0,
+  payoutCoverage: 0,
+  residualAmount: 0,
+  falseAutoMatchCount: 0,
+  falseAutoMatchRate: 0,
+  humanReviewCount: 0,
+  autonomousReconciliationCoverage: 0,
+  predictedCount: 0,
+  truthCount: 0,
+  correctCount: 0,
+};
 
+export function emptySnapshot(error?: string) {
   return {
     company: "Acme Creator Co.",
-    events,
-    edges,
-    exceptions,
-    policies,
-    invalidRows,
-    decisions: await listDecisions(),
-    run: await latestRun(),
-    overview: metrics,
-    evaluation: { driftrecon: drift, baseline },
-    validations: events
-      .filter((event) => event.kind === "payout")
-      .map((payout) => validatePayout(payout, events, edges)),
+    events: [],
+    edges: [],
+    exceptions: [],
+    policies: [],
+    invalidRows: [],
+    decisions: [],
+    run: null,
+    overview: overviewMetrics([], [], []),
+    evaluation: { driftrecon: emptyEvaluation, baseline: emptyEvaluation },
+    validations: [],
+    error,
   };
+}
+
+export async function snapshot() {
+  try {
+    const events = await listEvents();
+    const edges = await listEdges();
+    const exceptions = await listExceptions();
+    const policies = await listPolicies();
+    const invalidRows = await listInvalidRows();
+    const truth = await loadGroundTruth();
+    const metrics = overviewMetrics(events, edges, exceptions);
+    const drift = evaluatePredictions(
+      edges,
+      truth,
+      events,
+      exceptions.filter((item) => item.status === "open").length,
+    );
+    const baseline = evaluatePredictions(runBaseline(events), truth, events, 0);
+
+    return {
+      company: "Acme Creator Co.",
+      events,
+      edges,
+      exceptions,
+      policies,
+      invalidRows,
+      decisions: await listDecisions(),
+      run: await latestRun(),
+      overview: metrics,
+      evaluation: { driftrecon: drift, baseline },
+      validations: events
+        .filter((event) => event.kind === "payout")
+        .map((payout) => validatePayout(payout, events, edges)),
+      error: undefined as string | undefined,
+    };
+  } catch (error) {
+    return emptySnapshot(error instanceof Error ? error.message : "Database unavailable");
+  }
 }
 
 function pickEdge(exception: ExceptionRecord, edges: MatchEdge[]) {

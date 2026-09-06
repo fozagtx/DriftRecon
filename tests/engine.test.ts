@@ -229,3 +229,16 @@ describe("Evaluation metrics", () => {
     expect(groundTruth.some((item) => truthKey(item) === truthKey(bogus))).toBe(false);
   });
 });
+
+describe("snapshot resilience", () => {
+  it("returns an empty page model when DATABASE_URL is missing", async () => {
+    const previous = process.env.DATABASE_URL;
+    delete process.env.DATABASE_URL;
+    const { snapshot } = await import("../lib/app/actions");
+    const data = await snapshot();
+    expect(data.events).toEqual([]);
+    expect(data.error).toMatch(/DATABASE_URL/);
+    if (previous) process.env.DATABASE_URL = previous;
+    else delete process.env.DATABASE_URL;
+  });
+});

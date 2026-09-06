@@ -24,6 +24,10 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   title: "DriftRecon",
   description: "Reconcile payment events to bank deposits. Code calculates. Agent investigates. Human decides uncertainty.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/icon.svg" }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

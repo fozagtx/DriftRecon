@@ -20,6 +20,12 @@ export function Overview({ data }: { data: Snapshot }) {
 
   return (
     <div className="flex flex-col gap-8">
+      {data.error ? (
+        <section className="border border-destructive bg-card p-4 text-sm text-destructive-foreground">
+          {data.error}
+        </section>
+      ) : null}
+
       <section className="flex flex-col gap-4 border border-border bg-card p-6 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Overview</p>
