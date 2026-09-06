@@ -13,34 +13,80 @@ import {
   replaceEvents,
   replaceGraph,
   saveDecision,
-  saveGroundTruth,
   savePolicy,
   upsertEvent,
 } from "../db/store";
 import { runBaseline } from "../evaluation/baseline";
 import { evaluatePredictions } from "../evaluation/metrics";
+import { parseBankCsv } from "../ingestion/bank";
 import { parseDodoEvents } from "../ingestion/dodo";
-import { loadAcmeDataset } from "../ingestion/load-acme";
+import { parseGumroadCsv } from "../ingestion/gumroad";
+import { parseStripeCsv } from "../ingestion/stripe";
 import { policyFromApproval } from "../policies/from-decision";
 import { overviewMetrics } from "../reconciliation/overview";
 import { runReconciliation } from "../reconciliation/pipeline";
 import { validatePayout } from "../reconciliation/invariants";
-import type { ExceptionRecord, LedgerEvent, MatchEdge } from "../types";
+import type { ExceptionRecord, ImportResult, LedgerEvent, MatchEdge, Source } from "../types";
 
-export async function importAcme() {
-  const dataset = loadAcmeDataset();
-  await replaceEvents(dataset.events, dataset.invalidRows);
-  await saveGroundTruth(dataset.groundTruth);
+export async function importUploads(files: {
+  stripe?: string;
+  gumroad?: string;
+  bank?: string;
+  dodo?: string;
+}) {
+  if (!files.stripe && !files.gumroad && !files.bank && !files.dodo) {
+    throw new Error("Upload a Stripe, Gumroad, or bank CSV, or a Dodo JSON file.");
+  }
+
+  const incoming: ImportResult = { events: [], invalidRows: [] };
+  const replaced = new Set<Source>();
+
+  if (files.stripe) {
+    replaced.add("stripe");
+    const parsed = parseStripeCsv(files.stripe);
+    incoming.events.push(...parsed.events);
+    incoming.invalidRows.push(...parsed.invalidRows);
+  }
+  if (files.gumroad) {
+    replaced.add("gumroad");
+    const parsed = parseGumroadCsv(files.gumroad);
+    incoming.events.push(...parsed.events);
+    incoming.invalidRows.push(...parsed.invalidRows);
+  }
+  if (files.bank) {
+    replaced.add("bank");
+    const parsed = parseBankCsv(files.bank);
+    incoming.events.push(...parsed.events);
+    incoming.invalidRows.push(...parsed.invalidRows);
+  }
+  if (files.dodo) {
+    replaced.add("dodo");
+    let payload: unknown;
+    try {
+      payload = JSON.parse(files.dodo);
+    } catch {
+      throw new Error("Dodo file must be JSON.");
+    }
+    const parsed = parseDodoEvents(payload);
+    incoming.events.push(...parsed.events);
+    incoming.invalidRows.push(...parsed.invalidRows);
+  }
+
+  const existing = await listEvents();
+  const existingInvalid = await listInvalidRows();
+  await replaceEvents(
+    [...existing.filter((event) => !replaced.has(event.source)), ...incoming.events],
+    [...existingInvalid.filter((row) => !replaced.has(row.source)), ...incoming.invalidRows],
+  );
+
   return {
-    eventCount: dataset.events.length,
-    invalidCount: dataset.invalidRows.length,
+    eventCount: incoming.events.length,
+    invalidCount: incoming.invalidRows.length,
+    sources: [...replaced],
   };
 }
 
 export async function reconcile() {
-  const extras = (await listEvents()).filter((event) => event.metadata?.ingested === "webhook");
-  await importAcme();
-  for (const extra of extras) await upsertEvent(extra);
   const events = await listEvents();
   const policies = await listPolicies();
   const decisions = await listDecisions();

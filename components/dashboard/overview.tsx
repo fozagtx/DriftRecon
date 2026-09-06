@@ -1,3 +1,4 @@
+import { ImportPanel } from "@/components/dashboard/import-panel";
 import { Money, Percent } from "@/components/money";
 import { RunButton } from "@/components/run-button";
 import type { snapshot } from "@/lib/app/actions";
@@ -38,6 +39,8 @@ export function Overview({ data }: { data: Snapshot }) {
         <RunButton />
       </section>
 
+      <ImportPanel />
+
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {metrics.map((metric) => (
           <article key={metric.label} className="border border-black/15 bg-white p-4">
@@ -51,7 +54,7 @@ export function Overview({ data }: { data: Snapshot }) {
         <h3 className="text-base font-medium">Exceptions</h3>
         {data.exceptions.length === 0 ? (
           <p className="border border-black/15 bg-white p-4 text-sm text-muted-foreground">
-            No exceptions. Run Reconciliation to import the demo dataset and match.
+            No exceptions. Import files, then run reconciliation.
           </p>
         ) : (
           <div className="overflow-x-auto border border-black/15 bg-white">
@@ -83,7 +86,7 @@ export function Overview({ data }: { data: Snapshot }) {
         <h3 className="text-base font-medium">Imported transactions</h3>
         {data.events.length === 0 ? (
           <p className="border border-dashed border-black/20 bg-white p-4 text-sm text-muted-foreground">
-            No rows yet. Run Reconciliation.
+            No rows yet. Upload source files above.
           </p>
         ) : (
           <div className="overflow-x-auto border border-black/15 bg-white">
