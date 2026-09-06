@@ -19,44 +19,72 @@ export function LandingHero() {
             Payment events, traced to the bank.
           </h1>
 
-          <article className="reveal reveal-2 mx-auto mt-12 w-full max-w-xl rounded-2xl border border-black/10 bg-white p-5 shadow-[0_18px_50px_-24px_rgb(0_0_0_/_0.4)] sm:p-6">
+          <article className="reveal reveal-2 mx-auto mt-12 w-full max-w-2xl rounded-2xl border border-black/10 bg-white p-5 shadow-[0_18px_50px_-24px_rgb(0_0_0_/_0.4)] sm:p-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">How it works</p>
-            <ol className="flow-steps mt-5 flex flex-col gap-3">
-              <li className="flow-step">
-                <span className="font-mono text-[10px] text-muted-foreground">01</span>
-                <div>
-                  <p className="text-sm font-medium">Import</p>
-                  <ul className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-3">
-                    {sources.map((source) => (
-                      <li key={source.src}>
-                        <img src={source.src} alt={source.alt} className="h-5 w-auto" />
-                      </li>
-                    ))}
-                  </ul>
+            <div className="how-reel mt-5">
+              <div className="how-stage">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Import</p>
+                <ul className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+                  {sources.map((source) => (
+                    <li key={source.src}>
+                      <img src={source.src} alt={source.alt} className="h-5 w-auto" />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="how-stage">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Recon Agent</p>
+                <p className="mt-2 text-sm font-medium">cross_period_adjustment</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  refund evt_refund_july_200 connects to a different accounting period
+                </p>
+                <dl className="mt-4 grid gap-2 sm:grid-cols-2">
+                  <div className="border border-black/10 p-3">
+                    <p className="font-mono text-[10px] text-muted-foreground">evt_refund_july_200</p>
+                    <p className="mt-1 text-sm">
+                      <img src="/logos/stripe.svg" alt="" className="mr-2 inline h-3.5 w-auto" />
+                      refund · $200.00
+                    </p>
+                    <p className="font-mono text-[10px] text-muted-foreground">2026-07-03</p>
+                  </div>
+                  <div className="border border-black/10 p-3">
+                    <p className="font-mono text-[10px] text-muted-foreground">evt_sale_june_1000</p>
+                    <p className="mt-1 text-sm">
+                      <img src="/logos/stripe.svg" alt="" className="mr-2 inline h-3.5 w-auto" />
+                      sale · $1,000.00
+                    </p>
+                    <p className="font-mono text-[10px] text-muted-foreground">2026-06-12</p>
+                  </div>
+                </dl>
+                <ul className="mt-4 space-y-1 font-mono text-[11px] text-muted-foreground">
+                  <li>get_event: refund evt_refund_july_200 $200.00 USD</li>
+                  <li>get_event: sale evt_sale_june_1000 $1,000.00 USD</li>
+                  <li>find_events: Found original sale ch_june_1000 in 2026-06</li>
+                </ul>
+              </div>
+
+              <div className="how-stage">
+                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Human decides</p>
+                <p className="mt-2 text-sm">
+                  Cross-period refund belongs to the original sale. Approve to create a refund policy.
+                </p>
+                <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+                  Candidate: refunds evt_refund_july_200 → evt_sale_june_1000 · confidence 1.00
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="how-approve inline-flex min-h-10 items-center bg-primary px-3 text-sm text-primary-foreground">
+                    Approve
+                  </span>
+                  <span className="inline-flex min-h-10 items-center border border-black/15 px-3 text-sm text-muted-foreground">
+                    Reject
+                  </span>
+                  <span className="inline-flex min-h-10 items-center border border-black/15 px-3 text-sm text-muted-foreground">
+                    Leave Unresolved
+                  </span>
                 </div>
-              </li>
-              <li className="flow-step">
-                <span className="font-mono text-[10px] text-muted-foreground">02</span>
-                <div>
-                  <p className="text-sm font-medium">Match</p>
-                  <p className="font-mono text-[11px] text-muted-foreground">exact refs → policies → score</p>
-                </div>
-              </li>
-              <li className="flow-step">
-                <span className="font-mono text-[10px] text-muted-foreground">03</span>
-                <div>
-                  <p className="text-sm font-medium">Validate</p>
-                  <p className="font-mono text-[11px] text-muted-foreground">sale − refund − dispute − fee ± FX = payout ≈ deposit</p>
-                </div>
-              </li>
-              <li className="flow-step">
-                <span className="font-mono text-[10px] text-muted-foreground">04</span>
-                <div>
-                  <p className="text-sm font-medium">Review</p>
-                  <p className="font-mono text-[11px] text-muted-foreground">agent investigates · human decides</p>
-                </div>
-              </li>
-            </ol>
+              </div>
+            </div>
           </article>
         </div>
       </div>
