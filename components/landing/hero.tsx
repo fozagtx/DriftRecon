@@ -10,7 +10,7 @@ export function LandingHero() {
             Payment events, traced to the bank.
           </h1>
           <p className="mt-4 text-base text-foreground/75 sm:text-lg">
-            Verify every payout to the deposit.
+            Verify every payment event, traced to the bank.
           </p>
           <Link
             href="/dashboard"
