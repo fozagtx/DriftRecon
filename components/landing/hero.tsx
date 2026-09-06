@@ -38,11 +38,10 @@ export function LandingHero() {
 
                 <div className="how-stage">
                   <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Recon Agent</p>
-                  <ul className="mt-3 space-y-1 font-mono text-[11px] text-muted-foreground">
-                    <li className="how-line">get_event</li>
-                    <li className="how-line how-line-2">get_candidate_matches</li>
-                    <li className="how-line how-line-3">find_events</li>
-                    <li className="how-line how-line-4">validate_payout</li>
+                  <ul className="mt-4 flex flex-col gap-2 text-sm">
+                    <li className="how-check border border-black/10 px-3 py-2">Exception</li>
+                    <li className="how-check how-check-2 border border-black/10 px-3 py-2">Related events</li>
+                    <li className="how-check how-check-3 border border-black/10 px-3 py-2">Recommendation</li>
                   </ul>
                 </div>
 
