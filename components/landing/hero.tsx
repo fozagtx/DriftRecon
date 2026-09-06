@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 export function LandingHero() {
@@ -16,14 +15,7 @@ export function LandingHero() {
           </h1>
 
           <div className="reveal reveal-2 relative mx-auto mt-10 min-h-[280px] max-w-3xl sm:min-h-[340px]">
-            <Image
-              src="/brand/mark.svg"
-              alt="DRIF"
-              width={280}
-              height={280}
-              className="mx-auto h-[220px] w-[220px] sm:h-[280px] sm:w-[280px]"
-              priority
-            />
+            <Wireform />
 
             <div className="absolute left-0 top-6 w-[46%] max-w-[220px] space-y-2 sm:top-10">
               <DataPlate label="Transaction id" value="ch_8f21a9c0" />
@@ -52,7 +44,7 @@ export function LandingHero() {
           </div>
 
           <p className="reveal reveal-3 mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-foreground/75 sm:text-base">
-            DriftRecon turns Stripe, Gumroad, Dodo, and bank rows into one ledger, then follows sale → fee / refund / dispute / FX → payout → deposit. Code does the arithmetic. The Recon Agent investigates exceptions. A human decides uncertainty.
+            Stripe, Gumroad, Dodo, and bank rows become one ledger. Sale → fee / refund / dispute / FX → payout → deposit. Code does the arithmetic. The Recon Agent investigates exceptions. A human decides uncertainty.
           </p>
 
           <div className="reveal reveal-4 mt-8 flex justify-center">
@@ -78,3 +70,23 @@ function DataPlate({ label, value }: { label: string; value: string }) {
   );
 }
 
+function Wireform() {
+  return (
+    <svg
+      viewBox="0 0 420 280"
+      className="mx-auto h-[240px] w-full text-black/30 sm:h-[300px]"
+      aria-hidden
+    >
+      <ellipse cx="210" cy="148" rx="118" ry="118" fill="none" stroke="currentColor" strokeWidth="1.2" />
+      <ellipse cx="210" cy="148" rx="88" ry="88" fill="none" stroke="currentColor" strokeWidth="1" />
+      {Array.from({ length: 18 }, (_, i) => {
+        const y = 40 + i * 12;
+        const r = 118;
+        const dy = y - 148;
+        if (Math.abs(dy) >= r) return null;
+        const half = Math.sqrt(r * r - dy * dy);
+        return <line key={y} x1={210 - half} y1={y} x2={210 + half} y2={y} stroke="currentColor" strokeWidth="0.8" />;
+      })}
+    </svg>
+  );
+}
