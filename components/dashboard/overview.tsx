@@ -29,8 +29,8 @@ export function Overview({ data }: { data: Snapshot }) {
       <section className="flex flex-col gap-4 border border-border bg-card p-6 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Overview</p>
-          <h2 className="mt-1 font-[family-name:var(--font-newsreader)] text-2xl">
-            {data.events.length === 0 ? "Load Acme Creator Co. and reconcile" : "Payment events to bank deposits"}
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight">
+            {data.events.length === 0 ? "Import the demo dataset and reconcile" : "Payment events to bank deposits"}
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
             {data.invalidRows.length} invalid row{data.invalidRows.length === 1 ? "" : "s"} retained.
@@ -127,7 +127,7 @@ function EmptyState() {
     <section className="border border-dashed border-border bg-card p-8">
       <h3 className="text-base font-medium">No transactions loaded</h3>
       <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-        Run reconciliation to import Acme Creator Co. from Stripe, Gumroad, Dodo, and bank CSVs. Invalid rows are kept visible.
+        Run reconciliation to import Stripe, Gumroad, Dodo, and bank CSVs. Invalid rows stay visible.
       </p>
     </section>
   );

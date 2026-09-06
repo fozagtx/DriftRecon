@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.10",
     "@neondatabase/serverless": "^1.1.0",
     "@tailwindcss/postcss": "^4",
     "@xyflow/react": "^12.11.6",

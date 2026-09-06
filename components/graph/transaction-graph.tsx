@@ -49,7 +49,7 @@ export function TransactionGraph({ events, edges }: { events: LedgerEvent[]; edg
           onNodeClick={(_, node) => setSelectedId(node.id)}
           proOptions={{ hideAttribution: true }}
         >
-          <Background color="#2a261f" />
+          <Background color="#c5cbb8" />
           <MiniMap pannable zoomable />
           <Controls />
         </ReactFlow>
@@ -120,9 +120,9 @@ function buildGraph(events: LedgerEvent[], edges: MatchEdge[]): { nodes: Node[];
       position: { x: column * 220, y: row * 72 },
       data: { label: `${event.kind}\n${formatMinor(event.amount, event.currency)}` },
       style: {
-        background: "#1c1915",
-        color: "#ede6d9",
-        border: "1px solid #2a261f",
+        background: "#ffffff",
+        color: "#111111",
+        border: "1px solid #111111",
         fontSize: 11,
         width: 180,
         whiteSpace: "pre-wrap",

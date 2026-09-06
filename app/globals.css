@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #161310;
-  --foreground: #ede6d9;
-  --card: #1c1915;
-  --card-foreground: #ede6d9;
-  --primary: #3f7a5a;
-  --primary-foreground: #f4efe4;
-  --secondary: #241f19;
-  --secondary-foreground: #d8d0c2;
-  --muted: #241f19;
-  --muted-foreground: #9a9184;
-  --accent: #c4a46a;
-  --accent-foreground: #161310;
-  --destructive: #b85c4a;
-  --destructive-foreground: #f4efe4;
-  --border: #2a261f;
-  --input: #2a261f;
-  --ring: #c4a46a;
-  --review: #c4a46a;
-  --reconciled: #3f7a5a;
+  --background: #eef3e6;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --primary: #111111;
+  --primary-foreground: #eef3e6;
+  --secondary: #f7faf2;
+  --secondary-foreground: #111111;
+  --muted: #e8eee0;
+  --muted-foreground: #5a6154;
+  --accent: #111111;
+  --accent-foreground: #eef3e6;
+  --destructive: #9b2c2c;
+  --destructive-foreground: #9b2c2c;
+  --border: #111111;
+  --input: #111111;
+  --ring: #111111;
+  --review: #6b5a2e;
+  --reconciled: #2f5d3d;
 }
 
 @theme inline {
@@ -42,13 +42,13 @@
   --color-ring: var(--ring);
   --color-review: var(--review);
   --color-reconciled: var(--reconciled);
-  --font-sans: var(--font-plex-sans);
+  --font-sans: var(--font-sora);
   --font-mono: var(--font-plex-mono);
-  --font-display: var(--font-newsreader);
+  --font-display: var(--font-sora);
 }
 
 * {
-  border-color: var(--border);
+  border-color: rgb(17 17 17 / 0.16);
 }
 
 html {
@@ -56,14 +56,101 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(1200px 500px at 10% -10%, rgb(196 164 106 / 0.06), transparent 50%),
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-plex-sans), sans-serif;
+  font-family: var(--font-sora), sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-sora), sans-serif;
+}
+
+.tick-frame {
+  position: relative;
+  border: 1px solid rgb(17 17 17 / 0.28);
+  background: rgb(255 255 255 / 0.55);
+}
+
+.tick-frame::before,
+.tick-frame::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: #111;
+  pointer-events: none;
+}
+
+.tick-frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid #111;
+  border-left: 1px solid #111;
+}
+
+.tick-frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid #111;
+  border-right: 1px solid #111;
+}
+
+.ruler-x,
+.ruler-y {
+  pointer-events: none;
+}
+
+.ruler-x {
+  background-image: repeating-linear-gradient(
+    to right,
+    rgb(17 17 17 / 0.22) 0 1px,
+    transparent 1px 12px
+  );
+}
+
+.ruler-y {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgb(17 17 17 / 0.22) 0 1px,
+    transparent 1px 12px
+  );
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reveal-2 {
+  animation-delay: 90ms;
+}
+
+.reveal-3 {
+  animation-delay: 180ms;
+}
+
+.reveal-4 {
+  animation-delay: 270ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-2,
+  .reveal-3,
+  .reveal-4 {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {

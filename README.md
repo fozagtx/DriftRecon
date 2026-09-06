@@ -1,6 +1,6 @@
 # DriftRecon
 
-Reconciles Stripe, Gumroad, Dodo, and bank activity for Acme Creator Co. into one ledger, then traces each sale through fees, refunds, disputes, and FX to the processor payout and the bank deposit.
+Reconciles Stripe, Gumroad, Dodo, and bank activity into one ledger, then traces each sale through fees, refunds, disputes, and FX to the processor payout and the bank deposit.
 
 Live app: [https://driftrecon.onrender.com](https://driftrecon.onrender.com)
 
@@ -101,7 +101,8 @@ sequenceDiagram
 
 | Route | What you see |
 | --- | --- |
-| Overview `/` | Totals, exceptions, imported rows, **Run Reconciliation** |
+| Landing `/` | Hero + **Launch app** |
+| Overview `/dashboard` | Totals, exceptions, imported rows, **Run Reconciliation** |
 | Graph `/graph` | Sale-to-bank graph (React Flow) |
 | Review `/review` | Agent evidence. Approve, reject, or leave unresolved |
 | Evaluation `/evaluation` | Precision, recall, payout coverage, residuals, false auto-matches vs baseline |
@@ -126,7 +127,7 @@ npm test
 npm run dev
 ```
 
-`npm run dev` starts the Next.js app. Click **Run Reconciliation**, then Overview → Graph → Review → Evaluation.
+`npm run dev` starts the Next.js app. Open the landing page, click **Launch app**, then Overview → Graph → Review → Evaluation.
 
 ### Render
 

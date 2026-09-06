@@ -173,7 +173,7 @@ const emptyEvaluation = {
 
 export function emptySnapshot(error?: string) {
   return {
-    company: "Acme Creator Co.",
+    company: "DriftRecon",
     events: [],
     edges: [],
     exceptions: [],
@@ -206,7 +206,7 @@ export async function snapshot() {
     const baseline = evaluatePredictions(runBaseline(events), truth, events, 0);
 
     return {
-      company: "Acme Creator Co.",
+      company: "DriftRecon",
       events,
       edges,
       exceptions,

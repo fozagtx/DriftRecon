@@ -32,7 +32,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
     return (
       <section className="border border-dashed border-border bg-card p-8">
         <h2 className="text-base font-medium">Review queue empty</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Load Acme and run reconciliation first.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Run reconciliation from Overview first.</p>
       </section>
     );
   }
@@ -41,7 +41,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
     <div className="flex flex-col gap-6">
       <section>
         <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Review queue</p>
-        <h2 className="mt-1 font-[family-name:var(--font-newsreader)] text-2xl">Agent recommendations</h2>
+        <h2 className="mt-1 text-2xl font-semibold tracking-tight">Agent recommendations</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Approve creates a constrained policy. The agent cannot approve its own case.
         </p>

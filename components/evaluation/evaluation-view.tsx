@@ -24,7 +24,7 @@ export function EvaluationView({ data }: { data: Snapshot }) {
     <div className="flex flex-col gap-6">
       <section>
         <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Evaluation</p>
-        <h2 className="mt-1 font-[family-name:var(--font-newsreader)] text-2xl">DriftRecon vs baseline</h2>
+        <h2 className="mt-1 text-2xl font-semibold tracking-tight">DriftRecon vs baseline</h2>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Metrics are calculated from this run&apos;s predictions. Ground truth is not available during matching. Hard-coded benchmarks are forbidden.
         </p>
