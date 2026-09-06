@@ -92,98 +92,35 @@ body {
   animation-delay: 270ms;
 }
 
-.how-reel {
-  display: grid;
-  min-height: 11.5rem;
-}
-
-.how-stage {
-  grid-area: 1 / 1;
+.how-check {
   opacity: 0;
-  pointer-events: none;
-  animation: how-show 12s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-
-.how-stage:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.how-stage:nth-child(2) {
-  animation-delay: 4s;
-}
-
-.how-stage:nth-child(3) {
-  animation-delay: 8s;
+  animation: how-tick 280ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .how-approve {
-  animation: how-pulse 12s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
-  animation-delay: 8s;
+  animation: how-pulse 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 }
 
-.how-stage:nth-child(1) .how-check,
-.how-stage:nth-child(2) .how-check {
-  opacity: 0;
-  transform: translateY(6px);
-  animation: how-tick 12s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
-}
-
-.how-stage:nth-child(1) .how-check:nth-child(1) { animation-delay: 0.2s; }
-.how-stage:nth-child(1) .how-check:nth-child(2) { animation-delay: 0.45s; }
-.how-stage:nth-child(1) .how-check:nth-child(3) { animation-delay: 0.7s; }
-.how-stage:nth-child(1) .how-check:nth-child(4) { animation-delay: 0.95s; }
-
-.how-stage:nth-child(2) .how-check { animation-delay: 4.25s; }
-.how-stage:nth-child(2) .how-check-2 { animation-delay: 4.55s; }
-.how-stage:nth-child(2) .how-check-3 { animation-delay: 4.85s; }
-
-@keyframes how-show {
-  0%,
-  4% {
+@keyframes how-tick {
+  from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
-  8%,
-  28% {
+  to {
     opacity: 1;
     transform: none;
-  }
-  33%,
-  100% {
-    opacity: 0;
-    transform: translateY(-6px);
   }
 }
 
 @keyframes how-pulse {
   0%,
-  10% {
+  70% {
     transform: none;
   }
-  16%,
-  24% {
+  85% {
     transform: scale(1.04);
   }
-  30%,
   100% {
-    transform: none;
-  }
-}
-
-@keyframes how-tick {
-  0%,
-  2% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  6%,
-  26% {
-    opacity: 1;
-    transform: none;
-  }
-  32%,
-  100% {
-    opacity: 0;
     transform: none;
   }
 }
@@ -192,25 +129,12 @@ body {
   .reveal,
   .reveal-2,
   .reveal-3,
-  .reveal-4 {
-    animation: none;
-    opacity: 1;
-  }
-
-  .how-reel {
-    display: flex;
-    min-height: 0;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .how-stage,
-  .how-approve,
-  .how-check {
+  .reveal-4,
+  .how-check,
+  .how-approve {
     animation: none;
     opacity: 1;
     transform: none;
-    pointer-events: auto;
   }
 
   *,
