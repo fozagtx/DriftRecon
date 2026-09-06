@@ -65,57 +65,6 @@ body {
   font-family: var(--font-sora), sans-serif;
 }
 
-.tick-frame {
-  position: relative;
-  border: 1px solid rgb(17 17 17 / 0.28);
-  background: rgb(255 255 255 / 0.55);
-}
-
-.tick-frame::before,
-.tick-frame::after {
-  content: "";
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-color: #111;
-  pointer-events: none;
-}
-
-.tick-frame::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1px solid #111;
-  border-left: 1px solid #111;
-}
-
-.tick-frame::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 1px solid #111;
-  border-right: 1px solid #111;
-}
-
-.ruler-x,
-.ruler-y {
-  pointer-events: none;
-}
-
-.ruler-x {
-  background-image: repeating-linear-gradient(
-    to right,
-    rgb(17 17 17 / 0.22) 0 1px,
-    transparent 1px 12px
-  );
-}
-
-.ruler-y {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    rgb(17 17 17 / 0.22) 0 1px,
-    transparent 1px 12px
-  );
-}
-
 @keyframes rise {
   from {
     opacity: 0;
@@ -145,7 +94,7 @@ body {
 
 .how-reel {
   display: grid;
-  min-height: 17.5rem;
+  min-height: 11.5rem;
 }
 
 .how-stage {
@@ -168,9 +117,29 @@ body {
 }
 
 .how-approve {
-  animation: how-pulse 12s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation: how-pulse 12s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
   animation-delay: 8s;
 }
+
+.how-stage:nth-child(1) .how-check,
+.how-stage:nth-child(2) .how-check,
+.how-stage:nth-child(2) .how-line {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: how-tick 12s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.how-stage:nth-child(1) .how-check:nth-child(1) { animation-delay: 0.2s; }
+.how-stage:nth-child(1) .how-check:nth-child(2) { animation-delay: 0.45s; }
+.how-stage:nth-child(1) .how-check:nth-child(3) { animation-delay: 0.7s; }
+.how-stage:nth-child(1) .how-check:nth-child(4) { animation-delay: 0.95s; }
+
+.how-stage:nth-child(2) .how-check { animation-delay: 4.25s; }
+.how-stage:nth-child(2) .how-check-2 { animation-delay: 4.5s; }
+.how-stage:nth-child(2) .how-line { animation-delay: 4.75s; }
+.how-stage:nth-child(2) .how-line-2 { animation-delay: 5s; }
+.how-stage:nth-child(2) .how-line-3 { animation-delay: 5.25s; }
+.how-stage:nth-child(2) .how-line-4 { animation-delay: 5.5s; }
 
 @keyframes how-show {
   0%,
@@ -197,10 +166,28 @@ body {
   }
   16%,
   24% {
-    transform: scale(1.03);
+    transform: scale(1.04);
   }
   30%,
   100% {
+    transform: none;
+  }
+}
+
+@keyframes how-tick {
+  0%,
+  2% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  6%,
+  26% {
+    opacity: 1;
+    transform: none;
+  }
+  32%,
+  100% {
+    opacity: 0;
     transform: none;
   }
 }
@@ -222,7 +209,9 @@ body {
   }
 
   .how-stage,
-  .how-approve {
+  .how-approve,
+  .how-check,
+  .how-line {
     animation: none;
     opacity: 1;
     transform: none;
