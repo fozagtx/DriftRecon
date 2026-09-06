@@ -2,6 +2,7 @@ import { attachAgentRecommendations } from "../agent/investigator";
 import { emitNeatlogs } from "../agent/neatlogs";
 import { inferRecommendation, tensorMuxConfig } from "../agent/tensormux";
 import {
+  clearLedger,
   latestRun,
   listDecisions,
   listEdges,
@@ -9,13 +10,16 @@ import {
   listExceptions,
   listInvalidRows,
   listPolicies,
+  listRuns,
   loadGroundTruth,
   replaceEvents,
   replaceGraph,
   saveDecision,
+  saveGroundTruth,
   savePolicy,
   upsertEvent,
 } from "../db/store";
+import { isLeftoverAcmeSeed, loadAcmeDataset } from "../ingestion/load-acme";
 import { runBaseline } from "../evaluation/baseline";
 import { evaluatePredictions } from "../evaluation/metrics";
 import { parseBankCsv } from "../ingestion/bank";
@@ -26,17 +30,42 @@ import { policyFromApproval } from "../policies/from-decision";
 import { overviewMetrics } from "../reconciliation/overview";
 import { runReconciliation } from "../reconciliation/pipeline";
 import { validatePayout } from "../reconciliation/invariants";
-import type { ExceptionRecord, ImportResult, LedgerEvent, MatchEdge, Source } from "../types";
+import type { ExceptionRecord, GroundTruthEdge, ImportResult, LedgerEvent, MatchEdge, Source } from "../types";
+import { z } from "zod";
+
+const groundTruthSchema = z.array(
+  z.object({
+    fromEventId: z.string().min(1),
+    toEventId: z.string().min(1),
+    relationship: z.enum(["belongs_to", "refunds", "disputes", "settles_into", "converts_into", "deposited_as"]),
+  }),
+);
+
+export function parseGroundTruth(text: string): GroundTruthEdge[] {
+  let payload: unknown;
+  try {
+    payload = JSON.parse(text);
+  } catch {
+    throw new Error("Ground truth file must be JSON.");
+  }
+  const result = groundTruthSchema.safeParse(payload);
+  if (!result.success) {
+    throw new Error("Ground truth must be an array of { fromEventId, toEventId, relationship }.");
+  }
+  return result.data;
+}
 
 export async function importUploads(files: {
   stripe?: string;
   gumroad?: string;
   bank?: string;
   dodo?: string;
+  groundTruth?: string;
 }) {
   if (!files.stripe && !files.gumroad && !files.bank && !files.dodo) {
     throw new Error("Upload a Stripe, Gumroad, or bank CSV, or a Dodo JSON file.");
   }
+  const groundTruth = files.groundTruth ? parseGroundTruth(files.groundTruth) : [];
 
   const incoming: ImportResult = { events: [], invalidRows: [] };
   const replaced = new Set<Source>();
@@ -72,16 +101,50 @@ export async function importUploads(files: {
     incoming.invalidRows.push(...parsed.invalidRows);
   }
 
-  await replaceEvents(incoming.events, incoming.invalidRows);
+  if (incoming.events.length === 0) {
+    throw new Error("No supported payment or bank records were found. Upload a Stripe, Gumroad, or bank CSV, or Dodo JSON.");
+  }
+
+  await clearLedger();
+  await replaceEvents(
+    incoming.events.map((event) => ({
+      ...event,
+      metadata: { ...event.metadata, imported: "upload" },
+    })),
+    incoming.invalidRows,
+  );
+  if (groundTruth.length > 0) {
+    await saveGroundTruth(groundTruth);
+  }
 
   return {
     eventCount: incoming.events.length,
     invalidCount: incoming.invalidRows.length,
+    groundTruthCount: groundTruth.length,
     sources: [...replaced],
   };
 }
 
+export async function loadSampleDataset() {
+  const sample = loadAcmeDataset();
+  await clearLedger();
+  await replaceEvents(
+    sample.events.map((event) => ({
+      ...event,
+      metadata: { ...event.metadata, imported: "sample" },
+    })),
+    sample.invalidRows,
+  );
+  await saveGroundTruth(sample.groundTruth);
+  return {
+    eventCount: sample.events.length,
+    invalidCount: sample.invalidRows.length,
+    groundTruthCount: sample.groundTruth.length,
+  };
+}
+
 export async function reconcile() {
+  await purgeLeftoverAcmeSeed();
   const events = await listEvents();
   const policies = await listPolicies();
   const decisions = await listDecisions();
@@ -222,6 +285,7 @@ export function emptySnapshot(error?: string) {
     invalidRows: [],
     decisions: [],
     run: null,
+    runs: [],
     overview: overviewMetrics([], [], []),
     evaluation: { driftrecon: emptyEvaluation, baseline: emptyEvaluation },
     validations: [],
@@ -229,8 +293,16 @@ export function emptySnapshot(error?: string) {
   };
 }
 
+async function purgeLeftoverAcmeSeed() {
+  const events = await listEvents();
+  if (isLeftoverAcmeSeed(events)) {
+    await clearLedger();
+  }
+}
+
 export async function snapshot() {
   try {
+    await purgeLeftoverAcmeSeed();
     const events = await listEvents();
     const edges = await listEdges();
     const exceptions = await listExceptions();
@@ -255,6 +327,7 @@ export async function snapshot() {
       invalidRows,
       decisions: await listDecisions(),
       run: await latestRun(),
+      runs: await listRuns(),
       overview: metrics,
       evaluation: { driftrecon: drift, baseline },
       validations: events

@@ -1,9 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function RunButton() {
+export function RunButton({ disabled = false }: { disabled?: boolean }) {
   const router = useRouter();
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
 
@@ -21,14 +22,14 @@ export function RunButton() {
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <button
+      <Button
         type="button"
         onClick={run}
-        disabled={state === "loading"}
-        className="inline-flex min-h-10 items-center bg-primary px-4 text-sm font-medium text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60"
+        disabled={disabled || state === "loading"}
+        size="lg"
       >
         {state === "loading" ? "Running…" : "Run Reconciliation"}
-      </button>
+      </Button>
       {state === "error" ? (
         <p className="text-sm text-destructive">Reconciliation failed. Retry.</p>
       ) : null}

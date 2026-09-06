@@ -231,14 +231,14 @@ describe("Evaluation metrics", () => {
 });
 
 describe("snapshot resilience", () => {
-  it("returns an empty page model when DATABASE_URL is missing", async () => {
-    const previous = process.env.DATABASE_URL;
-    delete process.env.DATABASE_URL;
+  it("returns an empty page model when NEON_PASSWORD is missing", async () => {
+    const previous = process.env.NEON_PASSWORD;
+    delete process.env.NEON_PASSWORD;
     const { snapshot } = await import("../lib/app/actions");
     const data = await snapshot();
     expect(data.events).toEqual([]);
-    expect(data.error).toMatch(/DATABASE_URL/);
-    if (previous) process.env.DATABASE_URL = previous;
-    else delete process.env.DATABASE_URL;
+    expect(data.error).toMatch(/NEON_PASSWORD/);
+    if (previous) process.env.NEON_PASSWORD = previous;
+    else delete process.env.NEON_PASSWORD;
   });
 });

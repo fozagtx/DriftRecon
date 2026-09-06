@@ -2,18 +2,8 @@
 
 import { BrandMark } from "@/components/brand-mark";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-const LINKS = [
-  { href: "/dashboard", label: "Overview" },
-  { href: "/graph", label: "Graph" },
-  { href: "/review", label: "Review" },
-  { href: "/evaluation", label: "Evaluation" },
-];
 
 export function SiteNav({ launch }: { launch?: boolean }) {
-  const pathname = usePathname();
-
   if (launch) {
     return (
       <header className="relative z-20 flex justify-center px-4 pt-6">
@@ -21,7 +11,7 @@ export function SiteNav({ launch }: { launch?: boolean }) {
           <BrandMark size="sm" />
           <Link
             href="/dashboard"
-            className="inline-flex h-9 items-center px-3 font-mono text-[11px] uppercase tracking-[0.12em] focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex h-9 items-center bg-primary px-3 font-mono text-[11px] uppercase tracking-[0.12em] text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             Launch app
           </Link>
@@ -34,20 +24,6 @@ export function SiteNav({ launch }: { launch?: boolean }) {
     <header className="relative z-20 border-b border-black/10 bg-background">
       <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-x-6 px-4 py-3 sm:px-6">
         <BrandMark size="md" />
-        <nav className="flex flex-1 flex-wrap items-center gap-x-6 gap-y-2" aria-label="Primary">
-          {LINKS.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm ${active ? "font-medium text-foreground" : "text-foreground/70 hover:text-foreground"}`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
         <Link href="/" className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
           Home
         </Link>

@@ -1,76 +1,124 @@
 import { ImportPanel } from "@/components/dashboard/import-panel";
-import { Money } from "@/components/money";
-import { RunButton } from "@/components/run-button";
+import { Money, Percent } from "@/components/money";
+import { Card, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { snapshot } from "@/lib/app/actions";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 type Snapshot = Awaited<ReturnType<typeof snapshot>>;
 
-const SOURCE_MARKS = [
-  { source: "stripe", src: "/logos/stripe.svg", alt: "Stripe" },
-  { source: "gumroad", src: "/logos/gumroad.svg", alt: "Gumroad" },
-  { source: "dodo", src: "/logos/dodo.webp", alt: "Dodo Payments" },
-  { source: "bank", src: "/logos/chase.svg", alt: "Bank" },
+const SOURCES = [
+  { key: "stripe", label: "Stripe" },
+  { key: "gumroad", label: "Gumroad" },
+  { key: "dodo", label: "Dodo" },
+  { key: "bank", label: "Bank" },
 ] as const;
 
 export function Overview({ data }: { data: Snapshot }) {
-  const open = data.exceptions.filter((item) => item.status === "open" || item.status === "unresolved").length;
+  const counts = new Map<string, number>();
+  for (const event of data.events) counts.set(event.source, (counts.get(event.source) ?? 0) + 1);
+  const hasEvents = data.events.length > 0;
+  const hasRun = data.run !== null;
 
   return (
-    <div className="flex flex-col gap-8">
-      {data.error ? (
-        <section className="border border-destructive bg-white p-4 text-sm text-destructive">
-          {data.error}
-        </section>
-      ) : null}
+    <div className="flex flex-col gap-10">
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+        <Card className="rounded-none border-black/15 py-0 lg:order-1">
+          <CardContent className="flex h-full flex-col gap-6 p-5">
+            <Figure
+              label="Total"
+              size="lg"
+              value={hasEvents ? <Money minor={data.overview.totalFinancialValue} currency="USD" /> : "—"}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <Figure label="Reconciled" value={hasRun ? <Money minor={data.overview.reconciledValue} currency="USD" /> : "—"} />
+              <Figure label="Unresolved" value={hasRun ? <Money minor={data.overview.unresolvedValue} currency="USD" /> : "—"} />
+            </div>
 
-      <section className="flex flex-col gap-4 border border-black/15 bg-white p-6 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Overview</p>
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight">Payment events to bank deposits</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {data.events.length} imported
-            {data.run ? " · reconciled" : " · not reconciled yet"}
-          </p>
+            <dl className="mt-auto grid grid-cols-4 gap-4 border-t border-black/10 pt-4">
+              {SOURCES.map((source) => (
+                <div key={source.key}>
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{source.label}</dt>
+                  <dd className="mt-1 font-mono text-lg tabular-nums">{hasEvents ? (counts.get(source.key) ?? 0) : "—"}</dd>
+                </div>
+              ))}
+            </dl>
+          </CardContent>
+        </Card>
+
+        <div className="lg:order-2">
+          <ImportPanel canReconcile={hasEvents} />
         </div>
-        <RunButton />
+      </div>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Runs</h2>
+        <Card className="rounded-none border-black/15 py-0">
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <Head>#</Head>
+                  <Head>Ran</Head>
+                  <Head align="right">Events</Head>
+                  <Head align="right">Edges</Head>
+                  <Head align="right">Auto</Head>
+                  <Head align="right">Review</Head>
+                  <Head align="right">Exceptions</Head>
+                  <Head align="right">Auto rate</Head>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data.runs.length === 0 ? (
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell colSpan={8} className="py-8 text-center text-sm text-muted-foreground">
+                      No runs yet
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  data.runs.map((run, index) => (
+                    <TableRow key={run.id}>
+                      <TableCell className="font-mono tabular-nums text-muted-foreground">{data.runs.length - index}</TableCell>
+                      <TableCell className="font-mono text-xs tabular-nums">
+                        {new Date(run.ranAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}
+                      </TableCell>
+                      <Num>{run.eventCount}</Num>
+                      <Num>{run.edgeCount}</Num>
+                      <Num>{run.autoCount}</Num>
+                      <Num>{run.reviewCount}</Num>
+                      <Num>{run.exceptionCount}</Num>
+                      <TableCell className="text-right">
+                        <Percent value={run.edgeCount === 0 ? 0 : run.autoCount / run.edgeCount} />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </section>
-
-      <ImportPanel />
-
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {SOURCE_MARKS.map((mark) => {
-          const count = data.events.filter((event) => event.source === mark.source).length;
-          return (
-            <article key={mark.source} className="flex items-center justify-between border border-black/15 bg-white px-4 py-3">
-              <img src={mark.src} alt={mark.alt} className="h-5 w-auto" />
-              <p className="font-mono text-lg tabular-nums">{count}</p>
-            </article>
-          );
-        })}
-      </section>
-
-      <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <Metric label="Total" value={<Money minor={data.overview.totalFinancialValue} currency="USD" />} />
-        <Metric label="Reconciled" value={<Money minor={data.overview.reconciledValue} currency="USD" />} />
-        <Metric label="Unresolved" value={<Money minor={data.overview.unresolvedValue} currency="USD" />} />
-      </section>
-
-      {open > 0 ? (
-        <Link href="/review" className="text-sm underline-offset-4 hover:underline">
-          Review {open} {open === 1 ? "case" : "cases"}
-        </Link>
-      ) : null}
     </div>
   );
 }
 
-function Metric({ label, value }: { label: string; value: ReactNode }) {
+function Figure({ label, value, size = "md" }: { label: string; value: ReactNode; size?: "md" | "lg" }) {
   return (
-    <article className="border border-black/15 bg-white p-4">
+    <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
-      <p className="mt-2 font-mono text-2xl tabular-nums">{value}</p>
-    </article>
+      <p className={`mt-2 font-mono tabular-nums ${size === "lg" ? "text-4xl sm:text-5xl" : "text-2xl"}`}>{value}</p>
+    </div>
   );
+}
+
+function Head({ children, align = "left" }: { children: ReactNode; align?: "left" | "right" }) {
+  return (
+    <TableHead className={`font-mono text-[10px] uppercase tracking-[0.12em] ${align === "right" ? "text-right" : ""}`}>
+      {children}
+    </TableHead>
+  );
+}
+
+function Num({ children }: { children: number }) {
+  return <TableCell className="text-right font-mono tabular-nums">{children}</TableCell>;
 }

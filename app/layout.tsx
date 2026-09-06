@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { IBM_Plex_Mono, Sora } from "next/font/google";
 import "./globals.css";
 
@@ -26,7 +27,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sora.variable} ${plexMono.variable} h-full antialiased`}>
-      <body className="min-h-full bg-background text-foreground">{children}</body>
+      <body className="min-h-full bg-background text-foreground">
+        <TooltipProvider>{children}</TooltipProvider>
+      </body>
     </html>
   );
 }

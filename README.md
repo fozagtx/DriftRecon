@@ -114,12 +114,12 @@ Needs Node 20 and a Neon Postgres database (project **DriftRecon**).
 Create `.env.local` with secrets only. TensorMux URL, model, and Neatlogs URL stay in `lib/config.ts`.
 
 ```bash
-DATABASE_URL=
+NEON_PASSWORD=
 TENSORMUX_API_KEY=
 NEATLOGS_API_KEY=
 ```
 
-`DATABASE_URL` is the Neon **pooled** connection string. The two API keys are optional.
+`NEON_PASSWORD` is the Neon role password. Host, database, and role live in `lib/config.ts`. The two API keys are optional.
 
 ```bash
 npm install
@@ -135,7 +135,7 @@ Service: [https://driftrecon.onrender.com](https://driftrecon.onrender.com)
 
 Set only:
 
-- `DATABASE_URL`
+- `NEON_PASSWORD`
 - `TENSORMUX_API_KEY`
 - `NEATLOGS_API_KEY`
 

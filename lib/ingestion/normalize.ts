@@ -36,8 +36,8 @@ const KIND_ALIASES: Record<string, EventKind> = {
   deposit: "bank_deposit",
 };
 
-export function mapKind(value: string): EventKind | null {
-  return KIND_ALIASES[value.trim().toLowerCase()] ?? null;
+export function mapKind(value: string | undefined): EventKind | null {
+  return KIND_ALIASES[value?.trim().toLowerCase() ?? ""] ?? null;
 }
 
 export function normalizeRows(rows: RawEventRow[], source: Source): ImportResult {

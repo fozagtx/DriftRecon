@@ -6,7 +6,7 @@ export default function Error({ reset }: { reset: () => void }) {
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Server error</p>
       <h2 className="mt-2 text-2xl font-semibold tracking-tight">Page failed to load</h2>
       <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-        The database request failed. Reload after DATABASE_URL is set on the host.
+        The database request failed. Reload after NEON_PASSWORD is set on the host.
       </p>
       <button
         type="button"

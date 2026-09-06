@@ -12,7 +12,7 @@ services:
         value: "20"
       - key: NODE_ENV
         value: production
-      - key: DATABASE_URL
+      - key: NEON_PASSWORD
         sync: false
       - key: TENSORMUX_API_KEY
         sync: false

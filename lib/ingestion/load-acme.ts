@@ -8,6 +8,29 @@ import { parseStripeCsv } from "./stripe";
 
 export const DATA_DIR = path.join(process.cwd(), "data");
 
+/** Seed IDs from data/. Rows that reached Neon without an import marker get purged. */
+export const ACME_SEED_EVENT_IDS = new Set([
+  "evt_sale_june_1000",
+  "evt_refund_july_200",
+  "evt_sale_noref",
+  "evt_bank_unmatched",
+  "evt_refund_ident",
+  "evt_refund_dodo_10",
+  "evt_dispute_dodo",
+  "evt_sale_gum_45",
+  "evt_payout_june_multi",
+]);
+
+export function isLeftoverAcmeSeed(events: LedgerEvent[]): boolean {
+  return events.some((event) => {
+    const seeded =
+      ACME_SEED_EVENT_IDS.has(event.id) || event.externalRef === "wire_acme_500";
+    if (!seeded) return false;
+    const imported = event.metadata.imported;
+    return imported !== "upload" && imported !== "sample" && event.metadata.ingested !== "webhook";
+  });
+}
+
 export function loadAcmeDataset(): ImportResult & { groundTruth: GroundTruthEdge[] } {
   const stripe = parseStripeCsv(readFileSync(path.join(DATA_DIR, "stripe.csv"), "utf8"));
   const gumroad = parseGumroadCsv(readFileSync(path.join(DATA_DIR, "gumroad.csv"), "utf8"));

@@ -1,4 +1,5 @@
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
+import { config } from "../config";
 import type {
   ExceptionRecord,
   GroundTruthEdge,
@@ -15,14 +16,14 @@ type Sql = NeonQueryFunction<false, false>;
 let sql: Sql | null = null;
 let schemaReady = false;
 
+/** Host, database, and role live in lib/config.ts. Only the password is a secret. */
 function databaseUrl(): string {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
-    throw new Error("DATABASE_URL is required. Use the Neon pooled connection string.");
+  const password = process.env.NEON_PASSWORD;
+  if (!password) {
+    throw new Error("NEON_PASSWORD is required. Host and database come from lib/config.ts.");
   }
-  const parsed = new URL(url);
-  parsed.searchParams.delete("channel_binding");
-  return parsed.toString();
+  const { host, database, role } = config.neon;
+  return `postgresql://${encodeURIComponent(role)}:${encodeURIComponent(password)}@${host}/${database}?sslmode=require`;
 }
 
 function getSql(): Sql {
@@ -172,6 +173,12 @@ export async function saveDecision(decision: HumanDecision): Promise<void> {
   await upsertRow("decisions", decision.id, decision);
 }
 
+export async function listRuns(): Promise<ReconciliationRun[]> {
+  const client = await ensureSchema();
+  const rows = await client`SELECT payload FROM runs ORDER BY payload->>'ranAt' DESC`;
+  return rows.map((row) => row.payload as ReconciliationRun);
+}
+
 export async function latestRun(): Promise<ReconciliationRun | null> {
   const client = await ensureSchema();
   const rows = await client`SELECT payload FROM meta WHERE key = 'latest_run'`;
@@ -196,4 +203,17 @@ export async function resetPredictions(): Promise<void> {
   const client = await ensureSchema();
   await client`DELETE FROM edges`;
   await client`DELETE FROM exceptions`;
+}
+
+export async function clearLedger(): Promise<void> {
+  const client = await ensureSchema();
+  await client`DELETE FROM events`;
+  await client`DELETE FROM invalid_rows`;
+  await client`DELETE FROM edges`;
+  await client`DELETE FROM exceptions`;
+  await client`DELETE FROM policies`;
+  await client`DELETE FROM decisions`;
+  await client`DELETE FROM runs`;
+  await client`DELETE FROM meta WHERE key IN ('ground_truth', 'latest_run')`;
+  await client`DELETE FROM meta`;
 }
