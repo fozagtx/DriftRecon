@@ -14,39 +14,43 @@ const LINKS = [
 export function SiteNav({ launch }: { launch?: boolean }) {
   const pathname = usePathname();
 
+  if (launch) {
+    return (
+      <header className="relative z-20 flex justify-center px-4 pt-6">
+        <div className="flex w-full max-w-md items-center justify-between rounded-full border border-black/10 bg-white/85 px-4 py-2 shadow-[0_8px_30px_-18px_rgb(0_0_0_/_0.45)] backdrop-blur">
+          <BrandMark size="sm" />
+          <Link
+            href="/dashboard"
+            className="inline-flex h-9 items-center px-3 font-mono text-[11px] uppercase tracking-[0.12em] focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Launch app
+          </Link>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="relative z-20 border-b border-black/10 bg-background">
       <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-x-6 px-4 py-3 sm:px-6">
         <BrandMark size="md" />
-
-        {launch ? (
-          <Link
-            href="/dashboard"
-            className="inline-flex h-9 items-center border border-black/20 bg-white px-3 font-mono text-[11px] uppercase tracking-[0.12em]"
-          >
-            Launch app
-          </Link>
-        ) : (
-          <>
-            <nav className="flex flex-1 flex-wrap items-center gap-x-6 gap-y-2" aria-label="Primary">
-              {LINKS.map((item) => {
-                const active = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`text-sm ${active ? "font-medium text-foreground" : "text-foreground/70 hover:text-foreground"}`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-            <Link href="/" className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-              Home
-            </Link>
-          </>
-        )}
+        <nav className="flex flex-1 flex-wrap items-center gap-x-6 gap-y-2" aria-label="Primary">
+          {LINKS.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm ${active ? "font-medium text-foreground" : "text-foreground/70 hover:text-foreground"}`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+        <Link href="/" className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+          Home
+        </Link>
       </div>
     </header>
   );
