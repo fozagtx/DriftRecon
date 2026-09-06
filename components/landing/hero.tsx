@@ -20,7 +20,7 @@ export function LandingHero() {
           </Link>
         </div>
 
-        <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl p-6">
+        <div className="relative w-full shrink-0 overflow-hidden rounded-2xl p-5 md:w-[22rem]">
           <img
             src="/hero/container.jpg"
             alt=""

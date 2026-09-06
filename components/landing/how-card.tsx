@@ -32,7 +32,7 @@ export function HowCard() {
   const current = STEPS[step];
 
   return (
-    <article className="w-full rounded-xl border border-black/10 bg-white p-5 shadow-[0_18px_50px_-24px_rgb(0_0_0_/_0.55)] sm:p-6">
+    <article className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_18px_50px_-24px_rgb(0_0_0_/_0.55)]">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">How it works</p>
       <div className="mt-4 min-h-[10.5rem]">
         {motion ? (
