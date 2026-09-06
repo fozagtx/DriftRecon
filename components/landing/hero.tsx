@@ -3,33 +3,31 @@ import Link from "next/link";
 
 export function LandingHero() {
   return (
-    <section className="px-4 pb-16 pt-10 sm:px-6 sm:pb-24 sm:pt-16">
-      <div className="mx-auto grid max-w-6xl items-start gap-8 md:grid-cols-2 md:gap-12">
-        <div className="flex max-w-xl flex-col items-start gap-8 pt-2 md:pt-8">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-[2.35rem] font-semibold leading-[1.02] tracking-tight sm:text-6xl">
-              Payment events, traced to the bank.
-            </h1>
-            <p className="max-w-md text-lg text-foreground/70 sm:text-xl">
-              Verify every payout to the deposit.
-            </p>
-          </div>
+    <section className="px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-14">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,22rem)] md:gap-16">
+        <div className="flex max-w-lg flex-col items-start">
+          <h1 className="text-[2rem] font-semibold leading-[1.08] tracking-tight sm:text-[2.75rem]">
+            Payment events, traced to the bank.
+          </h1>
+          <p className="mt-4 text-base text-foreground/75 sm:text-lg">
+            Verify every payout to the deposit.
+          </p>
           <Link
             href="/dashboard"
-            className="inline-flex min-h-10 items-center bg-primary px-4 text-sm font-medium text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="mt-8 inline-flex min-h-10 items-center bg-primary px-4 text-sm font-medium text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             Get started
           </Link>
         </div>
 
-        <div className="relative min-h-[26rem] overflow-hidden rounded-[28px] sm:min-h-[30rem]">
+        <div className="relative overflow-hidden rounded-2xl p-5 sm:p-6">
           <img
             src="/hero/container.jpg"
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-[#111111]/35" />
-          <div className="relative flex min-h-[26rem] items-center justify-center px-4 py-8 sm:min-h-[30rem] sm:px-6">
+          <div className="absolute inset-0 bg-[#111111]/30" />
+          <div className="relative">
             <HowCard />
           </div>
         </div>
