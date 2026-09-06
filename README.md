@@ -28,12 +28,10 @@ Open [http://localhost:3000](http://localhost:3000). Click **Run Reconciliation*
 
 Persistence is **Neon** (Lakebase Postgres). Set `DATABASE_URL` in `.env.local` to the pooled connection string.
 
-Optional inference / tracing:
+Optional inference / tracing. Base URLs and model live in `lib/config.ts`. Env holds API keys only:
 
 ```bash
-TENSORMUX_BASE_URL=
 TENSORMUX_API_KEY=
-TENSORMUX_MODEL=
 NEATLOGS_API_KEY=
 ```
 

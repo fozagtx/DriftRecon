@@ -1,5 +1,6 @@
 import { appendFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
+import { config } from "../config";
 
 export interface AgentTrace {
   at: string;
@@ -30,7 +31,7 @@ export async function emitNeatlogs(trace: AgentTrace): Promise<void> {
   const apiKey = process.env.NEATLOGS_API_KEY;
   if (!apiKey) return;
   try {
-    await fetch(process.env.NEATLOGS_ENDPOINT ?? "https://api.neatlogs.com/v1/traces", {
+    await fetch(config.neatlogs.endpoint, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,

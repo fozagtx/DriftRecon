@@ -1,3 +1,4 @@
+import { config } from "../config";
 import { agentRecommendationSchema } from "../schemas";
 import type { AgentRecommendation } from "../types";
 
@@ -8,11 +9,13 @@ export interface TensorMuxConfig {
 }
 
 export function tensorMuxConfig(): TensorMuxConfig | null {
-  const baseUrl = process.env.TENSORMUX_BASE_URL;
   const apiKey = process.env.TENSORMUX_API_KEY;
-  const model = process.env.TENSORMUX_MODEL ?? "recon-agent";
-  if (!baseUrl || !apiKey) return null;
-  return { baseUrl, apiKey, model };
+  if (!apiKey) return null;
+  return {
+    baseUrl: config.tensormux.baseUrl,
+    apiKey,
+    model: config.tensormux.model,
+  };
 }
 
 export async function inferRecommendation(input: unknown, config: TensorMuxConfig): Promise<AgentRecommendation> {
