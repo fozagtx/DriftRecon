@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: driftrecon
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: NEON_PROJECT_ID
+        sync: false
+      - key: NEON_BRANCH_ID
+        sync: false
+      - key: TENSORMUX_BASE_URL
+        sync: false
+      - key: TENSORMUX_API_KEY
+        sync: false
+      - key: TENSORMUX_MODEL
+        value: recon-agent
+      - key: NEATLOGS_API_KEY
+        sync: false
+      - key: NEATLOGS_ENDPOINT
+        value: https://api.neatlogs.com/v1/traces
