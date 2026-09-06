@@ -1,3 +1,10 @@
+const sources = [
+  { src: "/logos/stripe.svg", alt: "Stripe" },
+  { src: "/logos/gumroad.svg", alt: "Gumroad" },
+  { src: "/logos/dodo.svg", alt: "Dodo Payments" },
+  { src: "/logos/chase.svg", alt: "Chase" },
+] as const;
+
 export function LandingHero() {
   return (
     <section className="relative overflow-hidden">
@@ -19,7 +26,13 @@ export function LandingHero() {
                 <span className="font-mono text-[10px] text-muted-foreground">01</span>
                 <div>
                   <p className="text-sm font-medium">Import</p>
-                  <p className="font-mono text-[11px] text-muted-foreground">Stripe · Gumroad · Dodo · bank</p>
+                  <ul className="mt-2.5 flex flex-wrap items-center gap-x-5 gap-y-3">
+                    {sources.map((source) => (
+                      <li key={source.src}>
+                        <img src={source.src} alt={source.alt} className="h-5 w-auto" />
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </li>
               <li className="flow-step">
