@@ -32,9 +32,9 @@ export function HowCard() {
   const current = STEPS[step];
 
   return (
-    <article className="rounded-xl border border-black/10 bg-white p-4 shadow-[0_18px_50px_-24px_rgb(0_0_0_/_0.55)]">
+    <article className="w-full rounded-xl border border-black/10 bg-white p-6 shadow-[0_18px_50px_-24px_rgb(0_0_0_/_0.55)] sm:p-7">
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">How it works</p>
-      <div className="mt-4 min-h-[10.5rem]">
+      <div className="mt-5 min-h-[12rem]">
         {motion ? (
           <Stage name={current} />
         ) : (
