@@ -43,3 +43,6 @@ data/traces/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local brand notes, do not commit
+brand.md
