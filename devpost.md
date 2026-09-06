@@ -1,41 +1,39 @@
 ## Inspiration
 
-The Autonomous Office of the CFO still has a hole: a sale, a fee, a refund, an FX conversion, a payout, and a bank deposit do not arrive as one story. Platforms speak different event languages. Periods split related activity. We wanted opener tools to reconstruct that path without letting a model invent money. TensorMux for investigation. Neatlogs for the trace. Dodo Payments for live payment events. Agent Orchestrator to build and review the system. Not a starter template.
+CFO teams have to explain how a Stripe or Dodo sale became a bank deposit after fees, refunds, disputes, FX, and payouts. Those events often land in different months and different files. We built DriftRecon so opener tools could investigate the messy cases while TypeScript did the arithmetic.
 
 ## What it does
 
-DriftRecon reconciles Stripe, Gumroad, Dodo, and bank activity for Acme Creator Co.
+DriftRecon loads Acme Creator Co. from Stripe, Gumroad, Dodo Payments, and a bank CSV. Every row becomes a `LedgerEvent`. Exact references, approved policies, and a structured score propose relationships. Payout math runs in TypeScript. Matches at 0.95 and above auto-resolve only if the payout balances. Everything else goes to the review queue.
 
-Code calculates. The Recon Agent on TensorMux investigates exceptions with tools. Neatlogs records the agent run. A human approves, rejects, or leaves a case unresolved. An approved decision becomes a constrained policy. The next run can resolve the same pattern without asking again.
+TensorMux runs the Recon Agent on those exceptions. Neatlogs stores the agent trace. A reviewer can approve, reject, or leave the case unresolved. An approval writes a constrained policy that the next run can apply.
 
-The product is Overview, Graph, Review, and Evaluation. Sale → fee / refund / dispute / FX → payout → bank deposit.
+Screens: Overview, Graph, Review, Evaluation.
 
 ## How we built it
 
-Agent Orchestrator owned the build: reconciliation engine, data and evaluation, agent and policies, product UI, integration review. AO is how DriftRecon was developed. AO is not the runtime matcher.
+Agent Orchestrator split the work into reconciliation engine, data and evaluation, agent and policies, product UI, and integration review. AO stayed on development.
 
-TensorMux runs the Recon Agent. Input and output are structured JSON. Zod validates both. An invalid model response is an execution error, never a reconciliation result.
+TensorMux serves the Recon Agent. Requests and replies are JSON. Zod validates them. A bad reply stops the agent call.
 
-Neatlogs traces agent execution, model request and response, tool calls, tool results, validation errors, recommendations, confidence, and human-review escalation.
+Neatlogs records agent execution, model I/O, tool calls, tool results, validation errors, recommendations, confidence, and review escalations.
 
-Dodo Payments is a live source. The webhook validates the payload, normalizes it to `LedgerEvent`, keeps raw metadata, stores the event, and includes it in the next reconcile.
+The Dodo Payments webhook accepts sale, refund, dispute, and payout events, validates them, writes `LedgerEvent` rows, and includes them in reconcile.
 
-Deterministic TypeScript owns amounts, scores, payout invariants, and confidence thresholds. The agent can inspect, rank, explain, and request review. It cannot change amounts, invent evidence, or mark an unbalanced payout reconciled.
+Agent tools: `get_event`, `find_events`, `get_candidate_matches`, `calculate_chain`, `validate_payout`, `get_policies`, `propose_match`, `request_human_review`. Amounts and thresholds stay in TypeScript.
 
 ## Challenges we ran into
 
-The opener tools are strong at investigation and weak at financial truth if you let them. TensorMux will write a confident sentence. That sentence is not a balance. Neatlogs will store a bad run if you treat a parse failure as a match. Dodo will send a refund in a later period than the sale. Agent Orchestrator will ship a slice that looks complete until evaluation hits ground truth.
-
-The hard work was keeping each tool in its lane: Dodo supplies events, TensorMux investigates, Neatlogs traces, TypeScript calculates, the human decides.
+Cross-period refunds fail simple same-month matching. Two $29 subscriptions look like duplicates. An unbalanced payout can still have perfect references. TensorMux can return JSON that fails Zod. Dodo can send a refund after the original payout already settled.
 
 ## Accomplishments that we're proud of
 
-Opener tools used as tools, not as a template. A Recon Agent that can only call `get_event`, `find_events`, `get_candidate_matches`, `calculate_chain`, `validate_payout`, `get_policies`, `propose_match`, and `request_human_review`. A Dodo webhook that becomes a ledger event without mutating amounts. Neatlogs on the agent path. A June sale and July refund that stay connected, go to review, become a policy, and resolve on the next run. Evaluation against labeled ground truth, not a hard-coded score.
+The June $1,000 Stripe sale and the July $200 refund stay linked, open a review case, produce a policy on approval, and resolve on the next run. Dodo events enter through the webhook. Neatlogs has the agent path. Evaluation precision, recall, payout coverage, residual, and false auto-match rate come from this run against labeled ground truth.
 
 ## What we learned
 
-Partner tools do not replace a ledger. TensorMux is for structured investigation. Neatlogs is for seeing what the agent actually did. Dodo is for real payment events. Agent Orchestrator is for building and reviewing the product. Arithmetic stays in code. Uncertainty stays visible.
+Put TensorMux on investigation, Neatlogs on traces, Dodo on payment events, and Agent Orchestrator on the build. Leave addition and subtraction in code. Send uncertain matches to a person.
 
 ## What's next for Driftrecon
 
-More Dodo event coverage. Tighter Neatlogs on every tool call. More policy types learned from review, still not executable model-written code. Keep evaluation live against ground truth. Keep Agent Orchestrator on development, not in the money path.
+Cover more Dodo event types. Log every tool call in Neatlogs. Add policy kinds from review. Keep evaluation on live predictions.
