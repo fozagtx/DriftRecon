@@ -23,10 +23,12 @@
 <Shell>
  <div class="dashboard">
   <header class="page-head">
-   <h1>Overview</h1>
-   <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
+   <div class="title-row">
+    <h1>Overview</h1>
+    <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
+   </div>
+   <ImportPanel canReconcile={has}/>
   </header>
-  <ImportPanel canReconcile={has}/>
   <div class="metrics card">
    <article><span>Value</span><strong>{has ? money(d.overview.totalFinancialValue) : '—'}</strong></article>
    <article><span>Reconciled</span><strong>{d.run ? money(d.overview.reconciledValue) : '—'}</strong></article>
@@ -64,7 +66,9 @@
  </div>
 </Shell>
 <style>
- .dashboard{display:flex;flex-direction:column;gap:16px}
+ .dashboard{display:flex;flex-direction:column;gap:16px;width:100%}
+ .dashboard .page-head{align-items:center}
+ .title-row{display:flex;align-items:center;gap:12px;min-width:0}
  .status-pill i.amber{background:var(--amber)}
  .metrics{display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}
  .metrics article{padding:16px;border-right:1px solid var(--line)}
@@ -81,7 +85,7 @@
  .sources header span{font:10px 'IBM Plex Mono';color:var(--muted)}
  .source{display:flex;align-items:center;gap:10px}
  .source img{height:16px;width:auto;object-fit:contain}
- .source img.dodo{height:20px;border-radius:50%}
+ .source img.dodo{height:20px;width:20px;border-radius:50%;object-fit:cover}
  .source img.icon{height:18px}
  .state{font-size:9px;text-transform:uppercase;letter-spacing:.08em}
  .review-card{padding:16px;display:flex;flex-direction:column}
