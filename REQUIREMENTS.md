@@ -15,18 +15,18 @@
 
 ## 2. Technology
 
-| Technology         | Usage                                |
-| ------------------ | ------------------------------------ |
-| Next.js            | Application                          |
-| TypeScript         | Application and reconciliation logic |
-| React              | Interface                            |
-| Neon               | Persistence (Lakebase Postgres)      |
-| Zod                | Input/output validation              |
-| React Flow         | Transaction graph                    |
-| TensorMux          | Recon Agent inference                |
-| Neatlogs           | Agent tracing and observability      |
-| Dodo Payments      | Payment-event source                 |
-| Agent Orchestrator | Development orchestration            |
+| Technology          | Usage                                      |
+| ------------------- | ------------------------------------------ |
+| SvelteKit           | Application, SSR, routing, and API endpoints |
+| TypeScript          | Application and reconciliation logic       |
+| Svelte 5            | Reactive, accessible interface             |
+| Neon                | Persistence (Lakebase Postgres)             |
+| Zod                 | Input/output validation                    |
+| Native SVG + Svelte | Interactive transaction graph              |
+| TensorMux           | Recon Agent inference                      |
+| Neatlogs            | Agent tracing and observability            |
+| Dodo Payments       | Payment-event source                       |
+| Agent Orchestrator  | Development orchestration                  |
 
 ---
 
