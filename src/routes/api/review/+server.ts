@@ -1,0 +1,2 @@
+import { json } from '@sveltejs/kit'; import { reviewException,snapshot } from '@/lib/app/actions';import {reviewActionSchema} from '@/lib/schemas';
+export async function POST({request}){const parsed=reviewActionSchema.safeParse(await request.json());if(!parsed.success)return json({error:parsed.error.flatten()},{status:400});try{const result=await reviewException(parsed.data.exceptionId,parsed.data.action);return json({...result,state:await snapshot()})}catch(e){return json({error:e instanceof Error?e.message:'Review failed'},{status:400})}}

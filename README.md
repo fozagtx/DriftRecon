@@ -103,13 +103,13 @@ sequenceDiagram
 | --- | --- |
 | Landing `/` | Hero + **Launch app** |
 | Overview `/dashboard` | Totals, exceptions, imported rows, **Run Reconciliation** |
-| Graph `/graph` | Sale-to-bank graph (React Flow) |
+| Graph `/graph` | Sale-to-bank graph (native SVG + Svelte) |
 | Review `/review` | Agent evidence. Approve, reject, or leave unresolved |
 | Evaluation `/evaluation` | Precision, recall, payout coverage, residuals, false auto-matches vs baseline |
 
 ## Setup
 
-Needs Node 20 and a Neon Postgres database (project **DriftRecon**).
+Needs Node 20+ and a Neon Postgres database (project **DriftRecon**).
 
 Create `.env.local` with secrets only. TensorMux URL, model, and Neatlogs URL stay in `lib/config.ts`.
 
@@ -127,7 +127,7 @@ npm test
 npm run dev
 ```
 
-`npm run dev` starts the Next.js app. Open the landing page, click **Launch app**, then Overview → Graph → Review → Evaluation.
+`npm run dev` starts the SvelteKit app. Open the landing page, click **Launch app**, then Overview → Graph → Review → Evaluation.
 
 ### Render
 
@@ -145,12 +145,17 @@ Health: [https://driftrecon.onrender.com/api/health](https://driftrecon.onrender
 
 Dodo webhook: `POST /api/webhooks/dodo`
 
+## Technology
+
+The application is built with **SvelteKit and Svelte 5**, TypeScript, and the Node adapter. Server-rendered workspace routes read from the existing deterministic reconciliation engine; Svelte client interactions handle import, reconciliation, review decisions, and the interactive money map.
+
 ## Commands
 
 ```bash
 npm install
 npm test
 npm run dev
+npm run check
 npm run build
 npm start
 ```
