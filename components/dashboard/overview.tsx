@@ -1,10 +1,9 @@
 import { ImportPanel } from "@/components/dashboard/import-panel";
 import { Money, Percent } from "@/components/money";
-import { RunButton } from "@/components/run-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { snapshot } from "@/lib/app/actions";
-import { ArrowRight, CheckCircle2, Circle, ClipboardCheck } from "lucide-react";
+import { ArrowRight, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -19,38 +18,34 @@ export function Overview({ data }: { data: Snapshot }) {
   const run = data.run;
   const hasRun = run !== null;
   const isRunStale = run !== null && run.eventCount !== data.events.length;
-  const hasCurrentRun = hasRun && !isRunStale;
   const openReviews = data.exceptions.filter((item) => item.status === "open").length;
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex flex-col justify-between gap-5 border-b border-black/15 pb-7 sm:flex-row sm:items-end">
+      <header className="border-b border-black/15 pb-7">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Acme Creator Co.</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Reconciliation overview</h1>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Trace revenue from sale to bank.</h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Import payment and bank activity, run the deterministic engine, then approve uncertain relationships.
+            Upload processor and bank activity. DriftRecon connects fees, refunds, disputes, FX, payouts, and deposits; only uncertain matches go to a human.
           </p>
         </div>
-        {hasEvents ? <RunButton /> : null}
       </header>
 
-      <ol className="grid border border-black/15 bg-white sm:grid-cols-3" aria-label="Reconciliation progress">
-        <Step number="01" label="Import events" complete={hasEvents} active={!hasEvents} />
-        <Step number="02" label="Run reconciliation" complete={hasCurrentRun} active={hasEvents && !hasCurrentRun} />
-        <Step number="03" label="Human review" complete={hasCurrentRun && openReviews === 0} active={hasCurrentRun && openReviews > 0} />
-      </ol>
+      <section aria-labelledby="import-heading">
+        <div className="mb-3 flex items-end justify-between gap-4">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Start here</p>
+            <h2 id="import-heading" className="mt-1 text-lg font-semibold">Import activity</h2>
+          </div>
+          {hasEvents ? <span className="font-mono text-xs text-muted-foreground">{data.events.length} events ready</span> : null}
+        </div>
+        <ImportPanel compact canReconcile={hasEvents} showSources={!hasEvents} hasRun={hasRun} isRunStale={isRunStale} />
+      </section>
 
       {!hasEvents ? (
-        <section className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(26rem,0.8fr)]">
-          <div className="py-4 lg:py-8">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Start here</p>
-            <h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-tight">Bring in the ledger before any matching begins.</h2>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
-              Load the Acme example or upload source files. Importing only stages events—the reconciliation runs when you choose Run Reconciliation.
-            </p>
-          </div>
-          <ImportPanel />
+        <section className="border border-black/15 bg-white p-5 text-sm leading-6 text-muted-foreground">
+          Importing never changes source amounts. Load the Acme example to explore the complete sale → payout → bank workflow without preparing files.
         </section>
       ) : (
         <>
@@ -94,7 +89,6 @@ export function Overview({ data }: { data: Snapshot }) {
           </section>
 
           <Runs data={data} />
-          <div className="max-w-xl"><ImportPanel canReconcile={false} showSources={false} hasRun={hasRun} isRunStale={isRunStale} /></div>
         </>
       )}
     </div>
@@ -119,10 +113,6 @@ export function ReviewQueueLink({ hasRun }: { hasRun: boolean }) {
       {content}
     </div>
   );
-}
-
-function Step({ number, label, complete, active }: { number: string; label: string; complete: boolean; active: boolean }) {
-  return <li className={`flex items-center gap-3 border-black/15 px-4 py-4 sm:border-r sm:last:border-r-0 ${active ? "bg-secondary" : ""}`}>{complete ? <CheckCircle2 className="h-4 w-4 text-reconciled" /> : <Circle className="h-4 w-4 text-muted-foreground" />}<span className="font-mono text-[10px] text-muted-foreground">{number}</span><span className="text-sm font-medium">{label}</span></li>;
 }
 
 function Metric({ label, value, prominent = false }: { label: string; value: ReactNode; prominent?: boolean }) {
