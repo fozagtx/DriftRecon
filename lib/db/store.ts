@@ -165,30 +165,40 @@ export async function listDecisions(): Promise<HumanDecision[]> {
   return readAll<HumanDecision>("decisions");
 }
 
-export async function savePolicy(policy: ReconciliationPolicy): Promise<void> {
-  await upsertRow("policies", policy.id, policy);
-}
-
-export async function saveDecision(decision: HumanDecision): Promise<void> {
-  await upsertRow("decisions", decision.id, decision);
-}
-
-/** Persist the human's verdict on both sides of a review case immediately. */
-export async function saveReviewOutcome(
-  exception: ExceptionRecord,
-  edge: MatchEdge | undefined,
-  action: HumanDecision["action"],
-): Promise<void> {
-  await upsertRow("exceptions", exception.id, {
+/** Atomically persist every record produced by a human review. */
+export async function saveReview({
+  policy,
+  decision,
+  exception,
+  edge,
+}: {
+  policy?: ReconciliationPolicy;
+  decision: HumanDecision;
+  exception: ExceptionRecord;
+  edge?: MatchEdge;
+}): Promise<void> {
+  const client = await ensureSchema();
+  const reviewedException = {
     ...exception,
-    status: action === "approve" ? "approved" : action === "reject" ? "rejected" : "unresolved",
-  });
-  if (edge && action !== "unresolved") {
-    await upsertRow("edges", edge.id, {
-      ...edge,
-      status: action === "approve" ? "approved" : "rejected",
-    });
-  }
+    status: decision.action === "approve" ? "approved" : decision.action === "reject" ? "rejected" : "unresolved",
+  } satisfies ExceptionRecord;
+  const reviewedEdge = edge && decision.action !== "unresolved"
+    ? ({
+        ...edge,
+        status: decision.action === "approve" ? "approved" : "rejected",
+      } satisfies MatchEdge)
+    : undefined;
+
+  await client.transaction((tx) => [
+    ...(policy
+      ? [tx`INSERT INTO policies (id, payload) VALUES (${policy.id}, ${policy as unknown as Record<string, unknown>}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`]
+      : []),
+    tx`INSERT INTO decisions (id, payload) VALUES (${decision.id}, ${decision as unknown as Record<string, unknown>}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`,
+    tx`INSERT INTO exceptions (id, payload) VALUES (${exception.id}, ${reviewedException as unknown as Record<string, unknown>}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`,
+    ...(reviewedEdge
+      ? [tx`INSERT INTO edges (id, payload) VALUES (${reviewedEdge.id}, ${reviewedEdge as unknown as Record<string, unknown>}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`]
+      : []),
+  ]);
 }
 
 export async function listRuns(): Promise<ReconciliationRun[]> {

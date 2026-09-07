@@ -14,10 +14,8 @@ import {
   loadGroundTruth,
   replaceEvents,
   replaceGraph,
-  saveDecision,
   saveGroundTruth,
-  savePolicy,
-  saveReviewOutcome,
+  saveReview,
   upsertEvent,
 } from "../db/store";
 import { isLeftoverAcmeSeed, loadAcmeDataset } from "../ingestion/load-acme";
@@ -227,13 +225,14 @@ export async function reviewException(exceptionId: string, action: "approve" | "
   const decidedAt = new Date().toISOString();
   const edge = pickEdge(exception, edges);
   const decisionId = `dec_${exceptionId}_${decidedAt}`;
+  let policy: ReturnType<typeof policyFromApproval> | undefined;
   let policyId: string | undefined;
 
   if (action === "approve" && edge) {
     const from = events.find((event) => event.id === edge.fromEventId);
     const to = events.find((event) => event.id === edge.toEventId);
     if (from && to) {
-      const policy = policyFromApproval({
+      policy = policyFromApproval({
         exception,
         edge,
         from,
@@ -241,20 +240,23 @@ export async function reviewException(exceptionId: string, action: "approve" | "
         decidedAt,
         decisionId,
       });
-      await savePolicy(policy);
       policyId = policy.id;
     }
   }
 
-  await saveDecision({
-    id: decisionId,
-    exceptionId,
-    action,
-    edgeId: edge?.id,
-    policyId,
-    decidedAt,
+  await saveReview({
+    policy,
+    decision: {
+      id: decisionId,
+      exceptionId,
+      action,
+      edgeId: edge?.id,
+      policyId,
+      decidedAt,
+    },
+    exception,
+    edge,
   });
-  await saveReviewOutcome(exception, edge, action);
 
   return { decisionId, policyId };
 }

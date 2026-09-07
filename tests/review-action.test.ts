@@ -7,6 +7,7 @@ const state = vi.hoisted(() => ({
   exceptions: [] as ExceptionRecord[],
   decisions: [] as HumanDecision[],
   policies: [] as ReconciliationPolicy[],
+  saveReviewFailure: undefined as Error | undefined,
 }));
 
 vi.mock("../lib/db/store", () => ({
@@ -22,12 +23,13 @@ vi.mock("../lib/db/store", () => ({
   loadGroundTruth: vi.fn().mockResolvedValue([]),
   replaceEvents: vi.fn(),
   replaceGraph: vi.fn(),
-  saveDecision: vi.fn(async (decision: HumanDecision) => state.decisions.push(decision)),
   saveGroundTruth: vi.fn(),
-  savePolicy: vi.fn(async (policy: ReconciliationPolicy) => state.policies.push(policy)),
-  saveReviewOutcome: vi.fn(async (exception: ExceptionRecord, edge: MatchEdge | undefined, action: HumanDecision["action"]) => {
-    exception.status = action === "approve" ? "approved" : action === "reject" ? "rejected" : "unresolved";
-    if (edge && action !== "unresolved") edge.status = action === "approve" ? "approved" : "rejected";
+  saveReview: vi.fn(async ({ policy, decision, exception, edge }: { policy?: ReconciliationPolicy; decision: HumanDecision; exception: ExceptionRecord; edge?: MatchEdge }) => {
+    if (state.saveReviewFailure) throw state.saveReviewFailure;
+    if (policy) state.policies.push(policy);
+    state.decisions.push(decision);
+    exception.status = decision.action === "approve" ? "approved" : decision.action === "reject" ? "rejected" : "unresolved";
+    if (edge && decision.action !== "unresolved") edge.status = decision.action === "approve" ? "approved" : "rejected";
   }),
   upsertEvent: vi.fn(),
 }));
@@ -44,6 +46,7 @@ function seedReview(): void {
   state.exceptions = [{ id: "exception-1", type: "cross_period_adjustment", summary: "Review refund", relatedEventIds: ["refund", "sale"], candidateEdgeIds: ["edge-1"], recommendation: "Review", confidence: 0.8, evidence: [], status: "open" }];
   state.decisions = [];
   state.policies = [];
+  state.saveReviewFailure = undefined;
 }
 
 describe("reviewException terminal status guard", () => {
@@ -78,5 +81,15 @@ describe("reviewException terminal status guard", () => {
     expect(state.decisions).toHaveLength(2);
     expect(state.exceptions[0].status).toBe("approved");
     expect(state.edges[0].status).toBe("approved");
+  });
+
+  it("does not expose partial review state when persistence fails", async () => {
+    state.saveReviewFailure = new Error("transaction failed");
+
+    await expect(reviewException("exception-1", "approve")).rejects.toThrow("transaction failed");
+    expect(state.decisions).toHaveLength(0);
+    expect(state.policies).toHaveLength(0);
+    expect(state.exceptions[0].status).toBe("open");
+    expect(state.edges[0].status).toBe("review");
   });
 });
