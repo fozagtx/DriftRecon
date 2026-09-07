@@ -58,26 +58,33 @@
     }
   }
 
+  async function holdOverlay(startedAt: number) {
+    const wait = Math.max(0, 800 - (Date.now() - startedAt));
+    if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
+    stopClock();
+  }
+
   async function upload(files: FileList | null) {
     if (!files?.length) return;
     const form = new FormData();
     for (const file of files) form.append('files', file);
     status = 'uploading';
     error = '';
+    const startedAt = Date.now();
     startClock();
     try {
       const response = await fetch('/api/import', { method: 'POST', body: form });
       const data = await readBody(response);
       if (!response.ok) throw new Error(data.error || 'Import failed');
       imported = data.events?.length ?? data.eventCount ?? null;
-      status = 'idle';
       await invalidateAll();
       if (redirect) goto('/dashboard');
     } catch (err) {
       error = err instanceof Error ? err.message : 'Import failed';
       status = 'error';
     } finally {
-      stopClock();
+      await holdOverlay(startedAt);
+      if (status === 'uploading') status = 'idle';
     }
   }
 
@@ -91,18 +98,19 @@
     status = 'running';
     error = '';
     imported = null;
+    const startedAt = Date.now();
     startClock();
     try {
       const response = await fetch('/api/reconcile', { method: 'POST' });
       const data = await readBody(response);
       if (!response.ok) throw new Error(data.error || 'Reconciliation failed');
-      status = 'idle';
       await invalidateAll();
     } catch (err) {
       error = err instanceof Error ? err.message : 'Reconciliation failed';
       status = 'error';
     } finally {
-      stopClock();
+      await holdOverlay(startedAt);
+      if (status === 'running') status = 'idle';
     }
   }
 </script>
