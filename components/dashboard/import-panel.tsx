@@ -53,12 +53,14 @@ export function ImportPanel({
   showSources = true,
   hasRun = false,
   isRunStale = false,
+  compact = false,
 }: {
   redirectAfterUpload?: boolean;
   canReconcile?: boolean;
   showSources?: boolean;
   hasRun?: boolean;
   isRunStale?: boolean;
+  compact?: boolean;
 }) {
   const router = useRouter();
   const [{ state, error, importedCount }, dispatch] = useReducer(importPanelReducer, initialImportPanelState);
@@ -110,7 +112,7 @@ export function ImportPanel({
   return (
     <div className="flex w-full flex-col gap-5">
       <Card className="rounded-none border-black/15 py-0">
-        <CardContent className="p-5">
+        <CardContent className={compact ? "p-3" : "p-5"}>
           <label
             htmlFor="import-files"
             onDragEnter={(event) => {
@@ -127,22 +129,27 @@ export function ImportPanel({
               setIsDragging(false);
               upload(event.dataTransfer.files);
             }}
-            className={`flex min-h-48 w-full cursor-pointer flex-col items-center justify-center gap-3 border border-dashed px-5 py-6 text-center transition-colors focus-within:ring-2 focus-within:ring-ring ${
+            className={`flex w-full cursor-pointer items-center justify-between border border-dashed text-left transition-colors focus-within:ring-2 focus-within:ring-ring ${
+              compact ? "min-h-20 flex-col gap-3 px-4 py-3 sm:flex-row sm:gap-4" : "min-h-48 flex-col justify-center gap-3 px-5 py-6 text-center"
+            } ${
               isDragging ? "border-primary bg-secondary" : "border-black/25 hover:border-primary hover:bg-secondary/50"
             }`}
           >
-            <img src="/logos/excel.svg" alt="" className="h-12 w-12" />
-            <p className="text-sm text-muted-foreground">
-              {state === "uploading" ? "Importing files…" : "Drop files here"}
-            </p>
+            <img src="/logos/excel.svg" alt="" className={compact ? "h-9 w-9 shrink-0" : "h-12 w-12"} />
+            <div className={compact ? "min-w-0 flex-1" : "contents"}>
+              <p className="text-sm font-medium text-foreground">
+                {state === "uploading" ? "Importing files…" : "Upload source files"}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">Stripe, Gumroad, Dodo, or bank · CSV and JSON</p>
+            </div>
             <span
-              className={`inline-flex min-h-10 items-center bg-primary px-4 text-sm font-medium text-primary-foreground ${
+              className={`inline-flex min-h-10 shrink-0 items-center bg-primary px-4 text-sm font-medium text-primary-foreground ${
                 busy ? "invisible" : ""
               }`}
             >
               Choose files
             </span>
-            {names.length > 0 ? (
+            {names.length > 0 && !compact ? (
               <span className="font-mono text-[11px] text-muted-foreground">{names.join(" · ")}</span>
             ) : null}
             <input
@@ -161,7 +168,7 @@ export function ImportPanel({
           {error ? <p className="mt-3 text-center text-sm text-destructive">{error}</p> : null}
           {importedCount !== null ? <p className="mt-3 text-center text-sm text-reconciled">{importedCount} events imported.</p> : null}
         </CardContent>
-        <CardFooter className="flex items-center justify-between gap-3 border-t border-black/10 bg-transparent px-5 py-4">
+        <CardFooter className={`flex items-center justify-between gap-3 border-t border-black/10 bg-transparent ${compact ? "px-4 py-3" : "px-5 py-4"}`}>
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={loadSample}>
             <FlaskConical aria-hidden="true" />
             {state === "sampling" ? "Loading example…" : "Load Acme example"}

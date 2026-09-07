@@ -1,5 +1,4 @@
 import { HowCard } from "@/components/landing/how-card";
-import Link from "next/link";
 
 export function LandingHero() {
   return (
@@ -9,12 +8,9 @@ export function LandingHero() {
           <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight sm:text-6xl">
             Verify every payment event, traced to the bank.
           </h1>
-          <Link
-            href="/dashboard"
-            className="mt-8 inline-flex min-h-10 items-center bg-primary px-4 text-sm font-medium text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Get started
-          </Link>
+          <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground">
+            Import processor and bank activity, run deterministic reconciliation, and review only the relationships that need judgment.
+          </p>
         </div>
         <a
           href="https://github.com/fozagtx/DriftRecon"
