@@ -188,7 +188,7 @@ export async function saveReviewOutcome(
     await upsertRow("edges", edge.id, {
       ...edge,
       status: action === "approve" ? "approved" : "rejected",
-      ...(action === "approve" ? { policyId } : {}),
+      ...(action === "approve" && policyId !== undefined ? { policyId } : {}),
     });
   }
 }
