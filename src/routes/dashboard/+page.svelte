@@ -24,16 +24,14 @@
  <div class="dashboard">
   <header class="page-head">
    <div>
-    <p class="eyebrow">Workspace</p>
     <h1>Overview</h1>
-    <p>Import Stripe, Dodo Payments, Gumroad, and bank activity. Uncertain matches go to review.</p>
    </div>
    <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Update available' : d.run ? 'Ledger current' : 'Awaiting first run'}</span>
   </header>
   <section>
    <div class="section-head"><h2>Import</h2>{#if has}<span>{d.events.length} events ready</span>{/if}</div>
    <ImportPanel compact canReconcile={has}/>
-   {#if !has}<p class="hint">Judges: upload <code>data/judges-test.json</code>, then run reconciliation.</p>{/if}
+   {#if !has}<p class="hint">Upload <code>data/judges-test.json</code></p>{/if}
   </section>
   {#if has}
    <section>
@@ -71,7 +69,7 @@
      <ClipboardCheck size={21}/>
      <span>Review</span>
      <strong>{d.run ? d.exceptions.filter((x: any) => x.status === 'open').length : '—'}</strong>
-     <p>{d.run ? 'Cases that need a human decision.' : 'Run reconciliation to generate review cases.'}</p>
+     <p>{d.run ? 'Open cases' : 'Run reconciliation first'}</p>
      {#if d.run}<a href="/review">Open review <ArrowRight size={15}/></a>{:else}<div>Open review <ArrowRight size={15}/></div>{/if}
     </aside>
    </section>

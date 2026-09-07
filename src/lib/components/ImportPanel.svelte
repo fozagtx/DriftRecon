@@ -11,7 +11,7 @@
  <div class="processors" aria-hidden="true"><img src="/logos/stripe.svg" alt=""/><img class="dodo" src="/logos/dodo.webp" alt=""/><img class="icon" src="/logos/gumroad.svg" alt=""/><img src="/logos/chase.svg" alt=""/></div>
  <label class:dragging ondragenter={(e)=>{e.preventDefault();dragging=true}} ondragover={(e)=>e.preventDefault()} ondragleave={()=>dragging=false} ondrop={(e)=>{e.preventDefault();dragging=false;upload(e.dataTransfer?.files??null)}}>
   <span class="upload-icon"><Upload size={19}/></span>
-  <span class="copy"><b>{state==='uploading'?'Importing files…':'Drop files or browse'}</b><small>Upload <code>data/judges-test.json</code>, or Stripe / Dodo Payments / Gumroad / bank CSV and JSON</small></span>
+  <span class="copy"><b>{state==='uploading'?'Importing files…':'Drop files or browse'}</b><small><code>data/judges-test.json</code> · Stripe · Dodo Payments</small></span>
   <span class="choose">Choose files</span>
   <input aria-label="Upload source files" type="file" accept=".csv,.json" multiple onchange={(e)=>{upload(e.currentTarget.files);e.currentTarget.value=''}}/>
  </label>
