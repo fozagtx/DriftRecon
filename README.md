@@ -103,7 +103,7 @@ sequenceDiagram
 | --- | --- |
 | Landing `/` | Hero + **Launch app** |
 | Overview `/dashboard` | Totals, exceptions, imported rows, **Run Reconciliation** |
-| Graph `/graph` | Sale-to-bank graph (React Flow) |
+| Graph `/graph` | Sale-to-bank graph (a Svelte transaction graph) |
 | Review `/review` | Agent evidence. Approve, reject, or leave unresolved |
 | Evaluation `/evaluation` | Precision, recall, payout coverage, residuals, false auto-matches vs baseline |
 
@@ -127,7 +127,7 @@ npm test
 npm run dev
 ```
 
-`npm run dev` starts the Next.js app. Open the landing page, click **Launch app**, then Overview → Graph → Review → Evaluation.
+`npm run dev` starts the SvelteKit app. Open the landing page, click **Launch app**, then Overview → Graph → Review → Evaluation.
 
 ### Render
 
@@ -152,7 +152,7 @@ npm install
 npm test
 npm run dev
 npm run build
-npm start
+npm run preview
 ```
 
 ## Dataset

@@ -1,0 +1,2 @@
+<script lang="ts">let { variant='primary', disabled=false, type='button', onclick, children }: { variant?: 'primary'|'secondary'|'ghost'; disabled?: boolean; type?: 'button'|'submit'; onclick?: (e:MouseEvent)=>void; children: import('svelte').Snippet }=$props();</script>
+<button {type} {disabled} {onclick} class:secondary={variant==='secondary'} class:ghost={variant==='ghost'} class="button">{@render children()}</button>

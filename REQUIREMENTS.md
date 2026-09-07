@@ -17,12 +17,12 @@
 
 | Technology         | Usage                                |
 | ------------------ | ------------------------------------ |
-| Next.js            | Application                          |
+| SvelteKit          | Application and server routes        |
 | TypeScript         | Application and reconciliation logic |
-| React              | Interface                            |
+| Svelte 5           | Interface                            |
 | Neon               | Persistence (Lakebase Postgres)      |
 | Zod                | Input/output validation              |
-| React Flow         | Transaction graph                    |
+| Svelte + SVG       | Transaction graph                    |
 | TensorMux          | Recon Agent inference                |
 | Neatlogs           | Agent tracing and observability      |
 | Dodo Payments      | Payment-event source                 |
@@ -710,22 +710,17 @@ AO is not DriftRecon's runtime reconciliation framework.
 
 ```text
 driftrecon/
-├── app/
-│   ├── page.tsx
-│   ├── graph/
-│   ├── review/
-│   ├── evaluation/
-│   └── api/
-│       ├── import/
-│       ├── reconcile/
-│       ├── review/
-│       └── webhooks/dodo/
-│
-├── components/
-│   ├── dashboard/
-│   ├── graph/
-│   ├── review/
-│   └── evaluation/
+├── src/
+│   ├── routes/
+│   │   ├── +page.svelte
+│   │   ├── dashboard/
+│   │   ├── graph/
+│   │   ├── review/
+│   │   ├── evaluation/
+│   │   └── api/
+│   └── lib/components/
+│       ├── ui/
+│       └── ImportPanel.svelte
 │
 ├── lib/
 │   ├── ingestion/
