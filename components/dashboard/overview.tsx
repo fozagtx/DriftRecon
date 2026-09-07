@@ -17,6 +17,8 @@ export function Overview({ data }: { data: Snapshot }) {
   for (const event of data.events) counts.set(event.source, (counts.get(event.source) ?? 0) + 1);
   const hasEvents = data.events.length > 0;
   const hasRun = data.run !== null;
+  const isRunStale = hasRun && data.run.eventCount !== data.events.length;
+  const hasCurrentRun = hasRun && !isRunStale;
   const openReviews = data.exceptions.filter((item) => item.status === "open").length;
 
   return (
@@ -34,8 +36,8 @@ export function Overview({ data }: { data: Snapshot }) {
 
       <ol className="grid border border-black/15 bg-white sm:grid-cols-3" aria-label="Reconciliation progress">
         <Step number="01" label="Import events" complete={hasEvents} active={!hasEvents} />
-        <Step number="02" label="Run reconciliation" complete={hasRun} active={hasEvents && !hasRun} />
-        <Step number="03" label="Human review" complete={hasRun && openReviews === 0} active={hasRun && openReviews > 0} />
+        <Step number="02" label="Run reconciliation" complete={hasCurrentRun} active={hasEvents && !hasCurrentRun} />
+        <Step number="03" label="Human review" complete={hasCurrentRun && openReviews === 0} active={hasCurrentRun && openReviews > 0} />
       </ol>
 
       {!hasEvents ? (
@@ -88,7 +90,7 @@ export function Overview({ data }: { data: Snapshot }) {
           </section>
 
           <Runs data={data} />
-          <div className="max-w-xl"><ImportPanel canReconcile={false} showSources={false} /></div>
+          <div className="max-w-xl"><ImportPanel canReconcile={false} showSources={false} hasRun={hasRun} isRunStale={isRunStale} /></div>
         </>
       )}
     </div>
