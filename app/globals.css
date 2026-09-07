@@ -100,7 +100,17 @@ html {
 
 body {
   font-family: var(--font-sora), sans-serif;
-  background-image: radial-gradient(circle at 15% 0%, hsla(39, 84%, 55%, .08), transparent 24rem);
+  background-image:
+    radial-gradient(circle at 12% 0%, hsla(39, 84%, 55%, .10), transparent 28rem),
+    radial-gradient(circle at 88% 15%, hsla(157, 54%, 25%, .06), transparent 26rem);
+}
+
+.landing-grid {
+  background-image:
+    linear-gradient(to right, hsla(216, 18%, 55%, .09) 1px, transparent 1px),
+    linear-gradient(to bottom, hsla(216, 18%, 55%, .09) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
 }
 
 ::selection { background: hsl(39, 84%, 80%); color: hsl(222, 28%, 14%); }
