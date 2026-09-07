@@ -8,10 +8,13 @@ Autonomous Office of the CFO. Core rule: code calculates, the Recon Agent invest
 
 ## For judges
 
-Use the single pack in the repo. Do not look for an in-app “load sample” button.
+Download the pack (Stripe, Dodo Payments, Gumroad, bank, and ground truth in one file):
 
-1. Upload `data/judges-test.json` on Overview (Stripe, Dodo Payments, Gumroad, bank, and ground truth in one file).
-2. Click **Run reconciliation**.
+**[data/judges-test.json](https://github.com/fozagtx/DriftRecon/raw/main/data/judges-test.json)**
+
+Right-click → Save as, or open that link. Then on Overview drop the file onto **Drop files here** and click **Run**.
+
+There is no in-app “load sample” button.
 
 Automated check (no database):
 
@@ -140,7 +143,7 @@ npm test
 npm run dev
 ```
 
-`npm run dev` starts the SvelteKit app. Open the landing page, click **Open workspace**, then upload `data/judges-test.json` on Overview.
+`npm run dev` starts the SvelteKit app. Open the landing page, click **Open workspace**, then drop [data/judges-test.json](https://github.com/fozagtx/DriftRecon/raw/main/data/judges-test.json) on Overview.
 
 ### Render
 
@@ -175,4 +178,6 @@ npm start
 
 ## Dataset
 
-Judges should use `data/judges-test.json`. The same records also live as `stripe.csv`, `gumroad.csv`, `bank.csv`, `dodo-events.json`, and `ground-truth.json`. Ground truth is used on Evaluation only, never during matching.
+Download: **[data/judges-test.json](https://github.com/fozagtx/DriftRecon/raw/main/data/judges-test.json)**
+
+The same records also live as `stripe.csv`, `gumroad.csv`, `bank.csv`, `dodo-events.json`, and `ground-truth.json`. Ground truth is used on Evaluation only, never during matching.

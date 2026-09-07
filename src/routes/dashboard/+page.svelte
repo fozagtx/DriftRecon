@@ -23,24 +23,11 @@
 <Shell>
  <div class="dashboard">
   <header class="page-head">
-   <div class="title-row">
-    <h1>Overview</h1>
-    <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
-   </div>
-   <ImportPanel canReconcile={has}/>
+   <h1>Overview</h1>
+   <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
   </header>
-  <div class="metrics card">
-   <article><span>Value</span><strong>{has ? money(d.overview.totalFinancialValue) : '—'}</strong></article>
-   <article><span>Reconciled</span><strong>{d.run ? money(d.overview.reconciledValue) : '—'}</strong></article>
-   <article><span>Unresolved</span><strong>{d.run ? money(d.overview.unresolvedValue) : '—'}</strong></article>
-   <article><span>Coverage</span><strong>{d.run ? pct(d.overview.autonomousCoverage) : '—'}</strong></article>
-   <div class="counts">
-    <p><RefreshCw/> Tx <b>{d.overview.transactionCount}</b></p>
-    <p><Landmark/> Payouts <b>{d.overview.payoutCount}</b></p>
-    <p><Landmark/> Deposits <b>{d.overview.bankDepositCount}</b></p>
-    <p><CircleAlert/> Exceptions <b>{d.run ? d.overview.exceptionCount : '—'}</b></p>
-   </div>
-  </div>
+  <p class="hint">Upload <code>data/judges-test.json</code> on Overview.</p>
+  <ImportPanel canReconcile={has}/>
   <section class="lower">
    <div class="card sources">
     <header><h2>Sources</h2><span>{d.events.length}</span></header>
@@ -63,12 +50,24 @@
     {#if d.run}<a href="/review">Open <ArrowRight size={15}/></a>{:else}<div>Open <ArrowRight size={15}/></div>{/if}
    </aside>
   </section>
+  <div class="metrics card">
+   <article><span>Value</span><strong>{has ? money(d.overview.totalFinancialValue) : '—'}</strong></article>
+   <article><span>Reconciled</span><strong>{d.run ? money(d.overview.reconciledValue) : '—'}</strong></article>
+   <article><span>Unresolved</span><strong>{d.run ? money(d.overview.unresolvedValue) : '—'}</strong></article>
+   <article><span>Coverage</span><strong>{d.run ? pct(d.overview.autonomousCoverage) : '—'}</strong></article>
+   <div class="counts">
+    <p><RefreshCw/> Tx <b>{d.overview.transactionCount}</b></p>
+    <p><Landmark/> Payouts <b>{d.overview.payoutCount}</b></p>
+    <p><Landmark/> Deposits <b>{d.overview.bankDepositCount}</b></p>
+    <p><CircleAlert/> Exceptions <b>{d.run ? d.overview.exceptionCount : '—'}</b></p>
+   </div>
+  </div>
  </div>
 </Shell>
 <style>
  .dashboard{display:flex;flex-direction:column;gap:16px;width:100%}
- .dashboard .page-head{align-items:center}
- .title-row{display:flex;align-items:center;gap:12px;min-width:0}
+ .hint{margin:0;color:var(--muted);font-size:13px}
+ .hint code{font:12px 'IBM Plex Mono';background:#efefe8;padding:1px 5px;border-radius:4px}
  .status-pill i.amber{background:var(--amber)}
  .metrics{display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}
  .metrics article{padding:16px;border-right:1px solid var(--line)}
