@@ -121,7 +121,7 @@
 </Shell>
 
 <style>
-  .dashboard { display: flex; flex-direction: column; gap: 20px; }
+  .dashboard { display: flex; flex-direction: column; gap: 14px; }
   .status-pill i.amber { background: var(--amber); }
   .notice { margin: 0; font-size: 13px; }
   .metrics { display: grid; grid-template-columns: repeat(4, 1fr); overflow: hidden; }

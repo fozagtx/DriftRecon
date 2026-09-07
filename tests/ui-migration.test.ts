@@ -34,5 +34,10 @@ describe('SvelteKit interface', () => {
     expect(importPanel).toContain('recon-overlay');
     expect(landing).not.toContain('product-shot');
     expect(landing).not.toMatch(/<button[^>]*>\s*Run reconciliation/);
+    const graph = readFileSync('src/routes/graph/+page.svelte', 'utf8');
+    const overview = readFileSync('src/routes/dashboard/+page.svelte', 'utf8');
+    expect(graph).not.toContain('Money map');
+    expect(graph).not.toContain('Sale to bank');
+    expect(overview).not.toContain('Acme Creator Co.');
   });
 });
