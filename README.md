@@ -162,4 +162,6 @@ npm start
 
 ## Dataset
 
-`data/` holds Acme Creator Co.: `stripe.csv`, `gumroad.csv`, `bank.csv`, `dodo-events.json`, `ground-truth.json`. Ground truth is used on Evaluation only, never during matching.
+`data/` holds Acme Creator Co. source files: `stripe.csv`, `gumroad.csv`, `bank.csv`, `dodo-events.json`, `ground-truth.json`. Ground truth is used on Evaluation only, never during matching.
+
+Judges: upload `data/judges-test.json` on Overview, then click **Run reconciliation**. Or run `npx vitest run tests/judges.test.ts`. There is no in-app sample loader.
