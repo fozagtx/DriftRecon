@@ -16,8 +16,9 @@ export function Overview({ data }: { data: Snapshot }) {
   const counts = new Map<string, number>();
   for (const event of data.events) counts.set(event.source, (counts.get(event.source) ?? 0) + 1);
   const hasEvents = data.events.length > 0;
-  const hasRun = data.run !== null;
-  const isRunStale = hasRun && data.run.eventCount !== data.events.length;
+  const run = data.run;
+  const hasRun = run !== null;
+  const isRunStale = run !== null && run.eventCount !== data.events.length;
   const hasCurrentRun = hasRun && !isRunStale;
   const openReviews = data.exceptions.filter((item) => item.status === "open").length;
 
