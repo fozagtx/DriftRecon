@@ -30,6 +30,7 @@ export function ImportPanel({
   const [error, setError] = useState<string | null>(null);
   const [names, setNames] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [importedCount, setImportedCount] = useState<number | null>(null);
   const busy = state === "uploading" || state === "sampling";
 
   async function submit(kind: "uploading" | "sampling", request: () => Promise<Response>) {
@@ -42,6 +43,8 @@ export function ImportPanel({
       setState("error");
       return;
     }
+    const payload = (await response.json()) as { eventCount?: number; events?: unknown[] };
+    setImportedCount(payload.eventCount ?? payload.events?.length ?? null);
     setState("idle");
     if (redirectAfterUpload) router.push("/dashboard");
     else router.refresh();
@@ -116,11 +119,12 @@ export function ImportPanel({
             />
           </label>
           {error ? <p className="mt-3 text-center text-sm text-destructive">{error}</p> : null}
+          {importedCount !== null ? <p className="mt-3 text-center text-sm text-reconciled">{importedCount} events imported. Nothing reconciled yet.</p> : null}
         </CardContent>
         <CardFooter className="flex items-center justify-between gap-3 border-t border-black/10 bg-transparent px-5 py-4">
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={loadSample}>
             <FlaskConical aria-hidden="true" />
-            {state === "sampling" ? "Loading sample…" : "Use sample data"}
+            {state === "sampling" ? "Loading example…" : "Load Acme example"}
           </Button>
           {redirectAfterUpload ? null : <RunButton disabled={!canReconcile || busy} />}
         </CardFooter>
