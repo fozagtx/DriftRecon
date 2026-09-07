@@ -1,4 +1,5 @@
 import { dodoWebhookSchema } from "../schemas";
+import { parseCsv, blankToUndefined } from "./csv";
 import { normalizeRows, mapKind, type RawEventRow } from "./normalize";
 import type { EventKind, ImportResult } from "../types";
 
@@ -72,6 +73,26 @@ export function parseDodoEvents(input: unknown): ImportResult {
     events: [...invalid.events, ...normalized.events],
     invalidRows: [...invalid.invalidRows, ...normalized.invalidRows],
   };
+}
+
+export function parseDodoCsv(text: string): ImportResult {
+  const { rows } = parseCsv(text);
+  const mapped: RawEventRow[] = rows.map((row) => ({
+    drift_id: blankToUndefined(row.drift_id),
+    source: "dodo",
+    kind: row.type || row.kind,
+    amount: row.amount,
+    currency: row.currency || "usd",
+    fee: blankToUndefined(row.fee),
+    net: blankToUndefined(row.net),
+    occurredAt: row.created || row.created_at || row.occurred_at,
+    externalRef: blankToUndefined(row.payment_id || row.refund_id || row.dispute_id || row.payout_id || row.id || row.external_ref),
+    parentRef: blankToUndefined(row.parent_ref),
+    payoutRef: blankToUndefined(row.payout_id || row.payout_ref),
+    description: blankToUndefined(row.description),
+    metadata: { ...row, sourceFile: "dodo.csv" },
+  }));
+  return normalizeRows(mapped, "dodo");
 }
 
 function optionalString(value: unknown): string | undefined {
