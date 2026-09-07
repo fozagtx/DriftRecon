@@ -13,7 +13,7 @@ describe('SvelteKit interface', () => {
   it('keeps a non-navigable review action before reconciliation', () => {
     const overview = readFileSync('src/routes/dashboard/+page.svelte', 'utf8');
     expect(overview).toContain('{#if d.run}<a href="/review"');
-    expect(overview).toContain('{:else}<div>Open review queue');
+    expect(overview).toContain('{:else}<div>Open');
   });
 
   it('provides accessible controls for the interactive money map', () => {

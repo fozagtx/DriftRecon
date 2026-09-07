@@ -1,0 +1,440 @@
+{
+  "stripe": "drift_id,type,amount,currency,fee,net,charge_id,parent_charge_id,payout_id,created,description\nevt_sale_june_1000,sale,1000.00,usd,29.20,970.80,ch_june_1000,,po_july_cross,2026-06-12T15:04:00Z,June creator workshop\nevt_fee_june_1000,fee,29.20,usd,,,fee_june_1000,ch_june_1000,po_july_cross,2026-06-12T15:04:10Z,Stripe fee\nevt_sale_june_80,sale,80.00,usd,2.62,77.38,ch_june_80,,po_june_multi,2026-06-08T11:20:00Z,Template pack\nevt_fee_june_80,fee,2.62,usd,,,fee_june_80,ch_june_80,po_june_multi,2026-06-08T11:20:10Z,Stripe fee\nevt_sale_june_120,sale,120.00,usd,3.78,116.22,ch_june_120,,po_june_multi,2026-06-09T09:10:00Z,Notion kit\nevt_fee_june_120,fee,3.78,usd,,,fee_june_120,ch_june_120,po_june_multi,2026-06-09T09:10:10Z,Stripe fee\nevt_sale_sub_june,sale,29.00,usd,1.14,27.86,ch_sub_june,,po_june_multi,2026-06-15T08:00:00Z,Pro subscription\nevt_fee_sub_june,fee,1.14,usd,,,fee_sub_june,ch_sub_june,po_june_multi,2026-06-15T08:00:10Z,Stripe fee\nevt_sale_eur_200,sale,200.00,eur,6.10,193.90,ch_eur_200,,po_july_fx,2026-06-20T14:00:00Z,EU workshop\nevt_fee_eur_200,fee,6.10,eur,,,fee_eur_200,ch_eur_200,po_july_fx,2026-06-20T14:00:10Z,Stripe fee\nevt_fx_eur_usd,fx_conversion,209.41,usd,,,fx_eur_200,ch_eur_200,po_july_fx,2026-07-18T12:00:00Z,EUR to USD conversion\nevt_refund_july_200,refund,200.00,usd,,,re_july_200,ch_june_1000,po_july_cross,2026-07-03T16:22:00Z,Partial refund June workshop\nevt_sale_july_150,sale,150.00,usd,4.65,145.35,ch_july_150,,po_july_ops,2026-07-02T10:00:00Z,July cohort\nevt_fee_july_150,fee,4.65,usd,,,fee_july_150,ch_july_150,po_july_ops,2026-07-02T10:00:10Z,Stripe fee\nevt_refund_partial_30,refund,30.00,usd,,,re_july_30,ch_july_150,po_july_ops,2026-07-06T13:40:00Z,Partial refund July cohort\nevt_sale_july_90,sale,90.00,usd,2.91,87.09,ch_july_90,,po_july_ops,2026-07-04T11:15:00Z,Clip pack\nevt_fee_july_90,fee,2.91,usd,,,fee_july_90,ch_july_90,po_july_ops,2026-07-04T11:15:10Z,Stripe fee\nevt_dispute_50,dispute,50.00,usd,,,dp_july_50,ch_july_150,po_july_ops,2026-07-11T09:00:00Z,Dispute July cohort\nevt_chargeback_40,chargeback,40.00,usd,,,cb_july_40,ch_july_90,po_july_ops,2026-07-14T17:30:00Z,Chargeback clip pack\nevt_sale_sub_july,sale,29.00,usd,1.14,27.86,ch_sub_july,,po_july_ops,2026-07-15T08:00:00Z,Pro subscription\nevt_fee_sub_july,fee,1.14,usd,,,fee_sub_july,ch_sub_july,po_july_ops,2026-07-15T08:00:10Z,Stripe fee\nevt_sale_ident_a,sale,50.00,usd,1.75,48.25,ch_ident_a,,po_july_ops,2026-07-10T18:00:00Z,Same-day workshop A\nevt_fee_ident_a,fee,1.75,usd,,,fee_ident_a,ch_ident_a,po_july_ops,2026-07-10T18:00:10Z,Stripe fee\nevt_sale_ident_b,sale,50.00,usd,1.75,48.25,ch_ident_b,,po_july_ops,2026-07-10T18:05:00Z,Same-day workshop B\nevt_fee_ident_b,fee,1.75,usd,,,fee_ident_b,ch_ident_b,po_july_ops,2026-07-10T18:05:10Z,Stripe fee\nevt_refund_ident,refund,50.00,usd,,,re_ident_50,,,2026-07-12T12:00:00Z,Refund missing parent\nevt_sale_noref,sale,25.00,usd,,,,,,2026-07-08T12:00:00Z,Sale missing references\nevt_sale_unbal,sale,100.00,usd,3.20,96.80,ch_unbal,,po_unbal,2026-07-21T09:00:00Z,Unbalanced source sale\nevt_fee_unbal,fee,3.20,usd,,,fee_unbal,ch_unbal,po_unbal,2026-07-21T09:00:10Z,Stripe fee\nevt_payout_june_multi,payout,221.46,usd,,,po_june_multi,,,2026-06-28T20:00:00Z,Stripe payout June multi\nevt_payout_july_cross,payout,770.80,usd,,,po_july_cross,,,2026-07-15T20:00:00Z,Stripe payout cross-period\nevt_payout_july_fx,payout,209.41,usd,,,po_july_fx,,,2026-07-20T20:00:00Z,Stripe payout FX\nevt_payout_july_ops,payout,236.80,usd,,,po_july_ops,,,2026-07-25T20:00:00Z,Stripe payout ops\nevt_payout_unbal,payout,98.00,usd,,,po_unbal,,,2026-07-22T20:00:00Z,Unbalanced payout\nevt_invalid_blank,sale,,usd,,,ch_invalid,,,2026-07-19T12:00:00Z,Invalid row missing amount\n",
+  "gumroad": "drift_id,type,amount,currency,fee,net,sale_id,parent_ref,payout_id,created_at,product,email\nevt_sale_gum_45,sale,45.00,usd,4.50,40.50,gum_45,,po_june_gum,2026-06-11T13:00:00Z,Acme preset pack,buyer@example.com\nevt_fee_gum_45,fee,4.50,usd,,,gum_fee_45,gum_45,po_june_gum,2026-06-11T13:00:10Z,Gumroad fee,buyer@example.com\nevt_sale_gum_dup,sale,45.00,usd,4.50,40.50,gum_45,,,2026-06-11T13:00:00Z,Acme preset pack,buyer@example.com\nevt_payout_gum,payout,40.50,usd,,,po_june_gum,,,2026-06-29T19:00:00Z,Gumroad payout,\n",
+  "bank": "drift_id,date,amount,currency,description,reference,payout_ref\nevt_bank_june_multi,2026-06-30T08:00:00Z,221.46,usd,STRIPE PAYOUT po_june_multi,po_june_multi,po_june_multi\nevt_bank_gum,2026-06-30T08:10:00Z,40.50,usd,GUMROAD PAYOUT po_june_gum,po_june_gum,po_june_gum\nevt_bank_dodo_june,2026-06-28T08:00:00Z,58.20,usd,DODO PAYOUT po_dodo_june,po_dodo_june,po_dodo_june\nevt_bank_july_cross,2026-07-16T08:00:00Z,770.80,usd,STRIPE PAYOUT po_july_cross,po_july_cross,po_july_cross\nevt_bank_july_fx,2026-07-21T08:00:00Z,209.41,usd,STRIPE PAYOUT po_july_fx,po_july_fx,po_july_fx\nevt_bank_july_ops,2026-07-26T08:00:00Z,236.80,usd,STRIPE PAYOUT po_july_ops,po_july_ops,po_july_ops\nevt_bank_dodo_july,2026-07-28T08:00:00Z,15.77,usd,DODO PAYOUT po_dodo_july,po_dodo_july,po_dodo_july\nevt_bank_unbal,2026-07-23T08:00:00Z,98.00,usd,STRIPE PAYOUT po_unbal,po_unbal,po_unbal\nevt_bank_unmatched,2026-07-18T08:00:00Z,500.00,usd,WIRE IN ACME UNKNOWN,wire_acme_500,\n",
+  "dodo": [
+    {
+      "type": "payment.succeeded",
+      "data": {
+        "drift_id": "evt_sale_dodo_60",
+        "id": "pay_dodo_60",
+        "payment_id": "pay_dodo_60",
+        "amount": "60.00",
+        "fee": "1.80",
+        "net_amount": "58.20",
+        "currency": "usd",
+        "created_at": "2026-06-14T12:00:00Z",
+        "payout_id": "po_dodo_june",
+        "description": "Dodo digital download"
+      }
+    },
+    {
+      "type": "fee",
+      "data": {
+        "drift_id": "evt_fee_dodo_60",
+        "id": "fee_dodo_60",
+        "amount": "1.80",
+        "currency": "usd",
+        "created_at": "2026-06-14T12:00:10Z",
+        "parent_ref": "pay_dodo_60",
+        "payout_id": "po_dodo_june",
+        "description": "Dodo fee"
+      }
+    },
+    {
+      "type": "payout.success",
+      "data": {
+        "drift_id": "evt_payout_dodo",
+        "payout_id": "po_dodo_june",
+        "id": "po_dodo_june",
+        "amount": "58.20",
+        "currency": "usd",
+        "created_at": "2026-06-27T18:00:00Z",
+        "description": "Dodo June payout"
+      }
+    },
+    {
+      "type": "payment.succeeded",
+      "data": {
+        "drift_id": "evt_sale_dodo_35",
+        "id": "pay_dodo_35",
+        "payment_id": "pay_dodo_35",
+        "amount": "35.00",
+        "fee": "1.23",
+        "net_amount": "33.77",
+        "currency": "usd",
+        "created_at": "2026-06-16T12:00:00Z",
+        "payout_id": "po_dodo_july",
+        "description": "Dodo course add-on"
+      }
+    },
+    {
+      "type": "fee",
+      "data": {
+        "drift_id": "evt_fee_dodo_35",
+        "id": "fee_dodo_35",
+        "amount": "1.23",
+        "currency": "usd",
+        "created_at": "2026-06-16T12:00:10Z",
+        "parent_ref": "pay_dodo_35",
+        "payout_id": "po_dodo_july",
+        "description": "Dodo fee"
+      }
+    },
+    {
+      "type": "refund.succeeded",
+      "data": {
+        "drift_id": "evt_refund_dodo_10",
+        "refund_id": "ref_dodo_10",
+        "payment_id": "pay_dodo_35",
+        "amount": "10.00",
+        "currency": "usd",
+        "created_at": "2026-07-05T12:00:00Z",
+        "payout_id": "po_dodo_july",
+        "description": "Dodo partial refund"
+      }
+    },
+    {
+      "type": "dispute.lost",
+      "data": {
+        "drift_id": "evt_dispute_dodo",
+        "dispute_id": "dp_dodo_08",
+        "payment_id": "pay_dodo_35",
+        "amount": "8.00",
+        "currency": "usd",
+        "created_at": "2026-07-09T12:00:00Z",
+        "payout_id": "po_dodo_july",
+        "description": "Dodo dispute"
+      }
+    },
+    {
+      "type": "payout.success",
+      "data": {
+        "drift_id": "evt_payout_dodo_july",
+        "payout_id": "po_dodo_july",
+        "id": "po_dodo_july",
+        "amount": "15.77",
+        "currency": "usd",
+        "created_at": "2026-07-27T18:00:00Z",
+        "description": "Dodo July payout"
+      }
+    }
+  ],
+  "groundTruth": [
+    {
+      "fromEventId": "evt_fee_june_1000",
+      "toEventId": "evt_sale_june_1000",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_june_80",
+      "toEventId": "evt_sale_june_80",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_june_120",
+      "toEventId": "evt_sale_june_120",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_sub_june",
+      "toEventId": "evt_sale_sub_june",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_eur_200",
+      "toEventId": "evt_sale_eur_200",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_july_150",
+      "toEventId": "evt_sale_july_150",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_july_90",
+      "toEventId": "evt_sale_july_90",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_sub_july",
+      "toEventId": "evt_sale_sub_july",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_ident_a",
+      "toEventId": "evt_sale_ident_a",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_ident_b",
+      "toEventId": "evt_sale_ident_b",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_unbal",
+      "toEventId": "evt_sale_unbal",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_gum_45",
+      "toEventId": "evt_sale_gum_45",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_dodo_60",
+      "toEventId": "evt_sale_dodo_60",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_fee_dodo_35",
+      "toEventId": "evt_sale_dodo_35",
+      "relationship": "belongs_to"
+    },
+    {
+      "fromEventId": "evt_refund_july_200",
+      "toEventId": "evt_sale_june_1000",
+      "relationship": "refunds"
+    },
+    {
+      "fromEventId": "evt_refund_partial_30",
+      "toEventId": "evt_sale_july_150",
+      "relationship": "refunds"
+    },
+    {
+      "fromEventId": "evt_refund_ident",
+      "toEventId": "evt_sale_ident_a",
+      "relationship": "refunds"
+    },
+    {
+      "fromEventId": "evt_refund_dodo_10",
+      "toEventId": "evt_sale_dodo_35",
+      "relationship": "refunds"
+    },
+    {
+      "fromEventId": "evt_dispute_50",
+      "toEventId": "evt_sale_july_150",
+      "relationship": "disputes"
+    },
+    {
+      "fromEventId": "evt_chargeback_40",
+      "toEventId": "evt_sale_july_90",
+      "relationship": "disputes"
+    },
+    {
+      "fromEventId": "evt_dispute_dodo",
+      "toEventId": "evt_sale_dodo_35",
+      "relationship": "disputes"
+    },
+    {
+      "fromEventId": "evt_sale_eur_200",
+      "toEventId": "evt_fx_eur_usd",
+      "relationship": "converts_into"
+    },
+    {
+      "fromEventId": "evt_sale_june_80",
+      "toEventId": "evt_payout_june_multi",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_june_120",
+      "toEventId": "evt_payout_june_multi",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_sub_june",
+      "toEventId": "evt_payout_june_multi",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_june_80",
+      "toEventId": "evt_payout_june_multi",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_june_120",
+      "toEventId": "evt_payout_june_multi",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_sub_june",
+      "toEventId": "evt_payout_june_multi",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_june_1000",
+      "toEventId": "evt_payout_july_cross",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_june_1000",
+      "toEventId": "evt_payout_july_cross",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_refund_july_200",
+      "toEventId": "evt_payout_july_cross",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_eur_200",
+      "toEventId": "evt_payout_july_fx",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_eur_200",
+      "toEventId": "evt_payout_july_fx",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fx_eur_usd",
+      "toEventId": "evt_payout_july_fx",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_july_150",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_july_150",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_refund_partial_30",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_july_90",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_july_90",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_dispute_50",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_chargeback_40",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_sub_july",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_sub_july",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_ident_a",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_ident_a",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_ident_b",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_ident_b",
+      "toEventId": "evt_payout_july_ops",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_unbal",
+      "toEventId": "evt_payout_unbal",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_unbal",
+      "toEventId": "evt_payout_unbal",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_gum_45",
+      "toEventId": "evt_payout_gum",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_gum_45",
+      "toEventId": "evt_payout_gum",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_dodo_60",
+      "toEventId": "evt_payout_dodo",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_dodo_60",
+      "toEventId": "evt_payout_dodo",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_sale_dodo_35",
+      "toEventId": "evt_payout_dodo_july",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_fee_dodo_35",
+      "toEventId": "evt_payout_dodo_july",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_refund_dodo_10",
+      "toEventId": "evt_payout_dodo_july",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_dispute_dodo",
+      "toEventId": "evt_payout_dodo_july",
+      "relationship": "settles_into"
+    },
+    {
+      "fromEventId": "evt_payout_june_multi",
+      "toEventId": "evt_bank_june_multi",
+      "relationship": "deposited_as"
+    },
+    {
+      "fromEventId": "evt_payout_gum",
+      "toEventId": "evt_bank_gum",
+      "relationship": "deposited_as"
+    },
+    {
+      "fromEventId": "evt_payout_dodo",
+      "toEventId": "evt_bank_dodo_june",
+      "relationship": "deposited_as"
+    },
+    {
+      "fromEventId": "evt_payout_july_cross",
+      "toEventId": "evt_bank_july_cross",
+      "relationship": "deposited_as"
+    },
+    {
+      "fromEventId": "evt_payout_july_fx",
+      "toEventId": "evt_bank_july_fx",
+      "relationship": "deposited_as"
+    },
+    {
+      "fromEventId": "evt_payout_july_ops",
+      "toEventId": "evt_bank_july_ops",
+      "relationship": "deposited_as"
+    },
+    {
+      "fromEventId": "evt_payout_dodo_july",
+      "toEventId": "evt_bank_dodo_july",
+      "relationship": "deposited_as"
+    },
+    {
+      "fromEventId": "evt_payout_unbal",
+      "toEventId": "evt_bank_unbal",
+      "relationship": "deposited_as"
+    }
+  ]
+}

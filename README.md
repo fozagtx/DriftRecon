@@ -6,6 +6,19 @@ Live app: [https://driftrecon.onrender.com](https://driftrecon.onrender.com)
 
 Autonomous Office of the CFO. Core rule: code calculates, the Recon Agent investigates exceptions, a human decides anything uncertain.
 
+## For judges
+
+Use the single pack in the repo. Do not look for an in-app “load sample” button.
+
+1. Upload `data/judges-test.json` on Overview (Stripe, Dodo Payments, Gumroad, bank, and ground truth in one file).
+2. Click **Run reconciliation**.
+
+Automated check (no database):
+
+```bash
+npx vitest run tests/judges.test.ts
+```
+
 ## What it does
 
 Payment platforms and the bank do not share one record. A June Stripe sale can refund in July. A EUR sale can settle as USD. Several sales can land in one payout. A payout can fail to match the deposit.
@@ -127,7 +140,7 @@ npm test
 npm run dev
 ```
 
-`npm run dev` starts the SvelteKit app. Open the landing page, click **Launch app**, then Overview → Graph → Review → Evaluation.
+`npm run dev` starts the SvelteKit app. Open the landing page, click **Open workspace**, then upload `data/judges-test.json` on Overview.
 
 ### Render
 
@@ -162,4 +175,4 @@ npm start
 
 ## Dataset
 
-`data/` holds Acme Creator Co.: `stripe.csv`, `gumroad.csv`, `bank.csv`, `dodo-events.json`, `ground-truth.json`. Ground truth is used on Evaluation only, never during matching.
+Judges should use `data/judges-test.json`. The same records also live as `stripe.csv`, `gumroad.csv`, `bank.csv`, `dodo-events.json`, and `ground-truth.json`. Ground truth is used on Evaluation only, never during matching.
