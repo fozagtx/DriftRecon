@@ -250,7 +250,7 @@ export async function reviewException(exceptionId: string, action: "approve" | "
     policyId,
     decidedAt,
   });
-  await saveReviewOutcome(exception, edge, action);
+  await saveReviewOutcome(exception, edge, action, policyId);
 
   return { decisionId, policyId };
 }
