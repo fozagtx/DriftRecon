@@ -9,10 +9,6 @@
 </script>
 <div class="wrap">
  <div class="bar" class:dragging>
-  <img src="/logos/stripe.svg" alt="Stripe"/>
-  <img class="dodo" src="/logos/dodo.webp" alt="Dodo Payments"/>
-  <img class="icon" src="/logos/gumroad.svg" alt="Gumroad"/>
-  <img src="/logos/chase.svg" alt="Chase"/>
   <label ondragenter={(e)=>{e.preventDefault();dragging=true}} ondragover={(e)=>e.preventDefault()} ondragleave={()=>dragging=false} ondrop={(e)=>{e.preventDefault();dragging=false;upload(e.dataTransfer?.files??null)}}>
    <Upload size={15}/>
    <span>{state==='uploading'?'Importing…':'Upload'}</span>
@@ -27,9 +23,6 @@
  .wrap{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
  .bar{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%}
  .bar.dragging label{border-color:var(--brand);background:#f5f8f1}
- .bar>img{height:16px;width:auto;object-fit:contain}
- .bar>img.dodo{height:20px;width:20px;border-radius:50%;object-fit:cover}
- .bar>img.icon{height:18px}
  .bar label{position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:12px;font-weight:650;cursor:pointer;white-space:nowrap}
  .bar input{position:absolute;width:1px;height:1px;padding:0;border:0;overflow:hidden;clip:rect(0,0,0,0)}
  .bar .btn{min-height:36px;padding:0 14px;font-size:12px}
