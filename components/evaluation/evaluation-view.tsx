@@ -40,17 +40,17 @@ export function EvaluationView({ data }: { data: Snapshot }) {
         <h2 className="text-2xl font-semibold tracking-tight">DriftRecon vs baseline</h2>
         <div className="flex flex-wrap items-center gap-2">
           {run ? (
-            <Badge variant="secondary" className="rounded-none font-mono text-[11px] uppercase tracking-[0.08em]">
+            <Badge variant="secondary" className="rounded-lg font-mono text-[11px] uppercase tracking-[0.08em]">
               <CheckCircle2 aria-hidden="true" />
               Ran {new Date(run.ranAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}
             </Badge>
           ) : (
-            <Badge variant="outline" className="rounded-none font-mono text-[11px] uppercase tracking-[0.08em]">
+            <Badge variant="outline" className="rounded-lg font-mono text-[11px] uppercase tracking-[0.08em]">
               <CircleDashed aria-hidden="true" />
               Not run
             </Badge>
           )}
-          <Badge variant={hasTruth ? "secondary" : "outline"} className="rounded-none font-mono text-[11px] uppercase tracking-[0.08em]">
+          <Badge variant={hasTruth ? "secondary" : "outline"} className="rounded-lg font-mono text-[11px] uppercase tracking-[0.08em]">
             <FileJson aria-hidden="true" />
             {hasTruth ? `${truthCount} ground-truth edges` : "No ground truth"}
           </Badge>

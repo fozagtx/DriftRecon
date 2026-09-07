@@ -22,7 +22,7 @@ export function Overview({ data }: { data: Snapshot }) {
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="border-b border-black/15 pb-7">
+      <header className="border-b border-border pb-7">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Acme Creator Co.</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Trace revenue from sale to bank.</h1>
@@ -44,7 +44,7 @@ export function Overview({ data }: { data: Snapshot }) {
       </section>
 
       {!hasEvents ? (
-        <section className="border border-black/15 bg-white p-5 text-sm leading-6 text-muted-foreground">
+        <section className="rounded-xl border bg-card shadow-[0_1px_3px_hsla(0,0%,0%,.08)] p-5 text-sm leading-6 text-muted-foreground">
           Importing never changes source amounts. Load the Acme example to explore the complete sale → payout → bank workflow without preparing files.
         </section>
       ) : (
@@ -61,9 +61,9 @@ export function Overview({ data }: { data: Snapshot }) {
           </section>
 
           <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-            <Card className="rounded-none border-black/15 py-0">
+            <Card className="rounded-xl border py-0">
               <CardContent className="p-0">
-                <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
+                <div className="flex items-center justify-between border-b border-border px-5 py-4">
                   <div><h2 className="font-medium">Imported sources</h2><p className="mt-1 text-xs text-muted-foreground">Events are staged independently from reconciliation.</p></div>
                   <span className="font-mono text-xs text-muted-foreground">{data.events.length} events</span>
                 </div>
@@ -79,7 +79,7 @@ export function Overview({ data }: { data: Snapshot }) {
               </CardContent>
             </Card>
 
-            <aside className="flex flex-col border border-black/15 bg-white p-5">
+            <aside className="flex flex-col rounded-xl border bg-card shadow-[0_1px_3px_hsla(0,0%,0%,.08)] p-5">
               <ClipboardCheck className="h-5 w-5" aria-hidden="true" />
               <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Human approval</p>
               <p className="mt-2 text-3xl font-semibold tabular-nums">{hasRun ? openReviews : "—"}</p>
@@ -102,7 +102,7 @@ export function ReviewQueueLink({ hasRun }: { hasRun: boolean }) {
       <ArrowRight className="h-4 w-4" aria-hidden="true" />
     </>
   );
-  const className = "mt-6 inline-flex min-h-10 items-center justify-between border-t border-black/10 pt-4 text-sm font-medium";
+  const className = "mt-6 inline-flex min-h-10 items-center justify-between border-t border-border pt-4 text-sm font-medium";
 
   return hasRun ? (
     <Link href="/review" className={className}>
@@ -116,9 +116,9 @@ export function ReviewQueueLink({ hasRun }: { hasRun: boolean }) {
 }
 
 function Metric({ label, value, prominent = false }: { label: string; value: ReactNode; prominent?: boolean }) {
-  return <Card className={`rounded-none border-black/15 py-0 ${prominent ? "bg-primary text-primary-foreground" : ""}`}><CardContent className="p-5"><p className={`font-mono text-[10px] uppercase tracking-[0.12em] ${prominent ? "text-primary-foreground/60" : "text-muted-foreground"}`}>{label}</p><p className="mt-4 font-mono text-2xl tabular-nums">{value}</p></CardContent></Card>;
+  return <Card className={`rounded-xl border py-0 ${prominent ? "bg-primary text-primary-foreground" : ""}`}><CardContent className="p-5"><p className={`font-mono text-[10px] uppercase tracking-[0.12em] ${prominent ? "text-[hsl(151,30%,78%)]" : "text-muted-foreground"}`}>{label}</p><p className="mt-4 font-mono text-2xl tabular-nums">{value}</p></CardContent></Card>;
 }
 
-function Runs({ data }: { data: Snapshot }) { return <section className="flex flex-col gap-3"><h2 className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Run history</h2><Card className="rounded-none border-black/15 py-0"><CardContent className="p-0"><Table><TableHeader><TableRow className="hover:bg-transparent"><Head>Ran</Head><Head align="right">Events</Head><Head align="right">Edges</Head><Head align="right">Auto</Head><Head align="right">Review</Head><Head align="right">Exceptions</Head></TableRow></TableHeader><TableBody>{data.runs.length === 0 ? <TableRow><TableCell colSpan={6} className="py-8 text-center text-sm text-muted-foreground">No reconciliation runs yet. Your imported events are ready.</TableCell></TableRow> : data.runs.map((run) => <TableRow key={run.id}><TableCell className="font-mono text-xs">{new Date(run.ranAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}</TableCell><Num>{run.eventCount}</Num><Num>{run.edgeCount}</Num><Num>{run.autoCount}</Num><Num>{run.reviewCount}</Num><Num>{run.exceptionCount}</Num></TableRow>)}</TableBody></Table></CardContent></Card></section>; }
+function Runs({ data }: { data: Snapshot }) { return <section className="flex flex-col gap-3"><h2 className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">Run history</h2><Card className="rounded-xl border py-0"><CardContent className="p-0"><Table><TableHeader><TableRow className="hover:bg-transparent"><Head>Ran</Head><Head align="right">Events</Head><Head align="right">Edges</Head><Head align="right">Auto</Head><Head align="right">Review</Head><Head align="right">Exceptions</Head></TableRow></TableHeader><TableBody>{data.runs.length === 0 ? <TableRow><TableCell colSpan={6} className="py-8 text-center text-sm text-muted-foreground">No reconciliation runs yet. Your imported events are ready.</TableCell></TableRow> : data.runs.map((run) => <TableRow key={run.id}><TableCell className="font-mono text-xs">{new Date(run.ranAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}</TableCell><Num>{run.eventCount}</Num><Num>{run.edgeCount}</Num><Num>{run.autoCount}</Num><Num>{run.reviewCount}</Num><Num>{run.exceptionCount}</Num></TableRow>)}</TableBody></Table></CardContent></Card></section>; }
 function Head({ children, align = "left" }: { children: ReactNode; align?: "left" | "right" }) { return <TableHead className={`font-mono text-[10px] uppercase tracking-[0.12em] ${align === "right" ? "text-right" : ""}`}>{children}</TableHead>; }
 function Num({ children }: { children: number }) { return <TableCell className="text-right font-mono tabular-nums">{children}</TableCell>; }

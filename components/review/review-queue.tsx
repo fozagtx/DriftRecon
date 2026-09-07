@@ -72,7 +72,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
 
       {current ? (
         <div className="grid gap-4 lg:grid-cols-[16rem_minmax(0,1fr)]">
-          <ol className="flex max-h-[70vh] flex-col gap-1 overflow-auto border border-black/15 bg-white p-2">
+          <ol className="flex max-h-[70vh] flex-col gap-1 overflow-auto rounded-xl border bg-card shadow-[0_1px_3px_hsla(0,0%,0%,.08)] p-2">
             {open.map((exception, index) => (
               <li key={exception.id}>
                 <button
@@ -156,7 +156,7 @@ export function CaseCard({
   const tools = [...(agent?.evidence ?? []), ...exception.evidence].filter((item) => item.kind === "tool" || item.kind === "reference");
 
   return (
-    <article className="flex flex-col gap-4 border border-black/15 bg-white p-5">
+    <article className="flex flex-col gap-4 rounded-xl border bg-card shadow-[0_1px_3px_hsla(0,0%,0%,.08)] p-5">
       <header className="flex flex-col gap-1">
         <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
           Case {index + 1} of {total} · {exception.type}
@@ -164,7 +164,7 @@ export function CaseCard({
         <h3 className="text-base font-medium">{exception.summary}</h3>
       </header>
 
-      <section className="border border-black/10 bg-secondary p-4">
+      <section className="border border-border bg-secondary p-4">
         <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Recon Agent</p>
         <p className="mt-2 text-sm">{agent?.recommendation ?? exception.recommendation}</p>
         <p className="mt-2 font-mono text-[11px] text-muted-foreground">
@@ -180,7 +180,7 @@ export function CaseCard({
       <dl className="grid gap-2 sm:grid-cols-2">
         {related.map((event) =>
           event ? (
-            <div key={event.id} className="border border-black/10 p-3 text-sm">
+            <div key={event.id} className="border border-border p-3 text-sm">
               <p className="font-mono text-[10px] text-muted-foreground">{event.id}</p>
               <p className="mt-1">
                 {event.source} · {event.kind} · {formatMinor(event.amount, event.currency)} {event.currency}
@@ -192,7 +192,7 @@ export function CaseCard({
       </dl>
 
       {tools.length > 0 ? (
-        <details className="border border-black/10 p-3">
+        <details className="border border-border p-3">
           <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
             Agent tools
           </summary>
