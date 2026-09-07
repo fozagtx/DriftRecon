@@ -111,7 +111,7 @@ export function ImportPanel({
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <Card className="rounded-none border-black/15 py-0">
+      <Card className="rounded-xl border py-0">
         <CardContent className={compact ? "p-3" : "p-5"}>
           <label
             htmlFor="import-files"
@@ -168,7 +168,7 @@ export function ImportPanel({
           {error ? <p className="mt-3 text-center text-sm text-destructive">{error}</p> : null}
           {importedCount !== null ? <p className="mt-3 text-center text-sm text-reconciled">{importedCount} events imported.</p> : null}
         </CardContent>
-        <CardFooter className={`flex items-center justify-between gap-3 border-t border-black/10 bg-transparent ${compact ? "px-4 py-3" : "px-5 py-4"}`}>
+        <CardFooter className={`flex items-center justify-between gap-3 border-t border-border bg-transparent ${compact ? "px-4 py-3" : "px-5 py-4"}`}>
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={loadSample}>
             <FlaskConical aria-hidden="true" />
             {state === "sampling" ? "Loading example…" : "Load Acme example"}

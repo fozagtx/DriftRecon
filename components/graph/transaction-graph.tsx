@@ -41,7 +41,7 @@ export function TransactionGraph({ events, edges }: { events: LedgerEvent[]; edg
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-      <div className="h-[640px] border border-border bg-card">
+      <div className="h-[640px] overflow-hidden rounded-xl border border-border bg-card shadow-[0_1px_3px_hsla(0,0%,0%,.08)]">
         <ReactFlow
           nodes={nodes}
           edges={flowEdges}
@@ -54,7 +54,7 @@ export function TransactionGraph({ events, edges }: { events: LedgerEvent[]; edg
           <Controls />
         </ReactFlow>
       </div>
-      <aside className="border border-border bg-card p-4">
+      <aside className="rounded-xl border border-border bg-card p-5 shadow-[0_1px_3px_hsla(0,0%,0%,.08)]">
         {selected ? (
           <dl className="flex flex-col gap-3 text-sm">
             <div>

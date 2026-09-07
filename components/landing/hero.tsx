@@ -1,40 +1,42 @@
 import { HowCard } from "@/components/landing/how-card";
+import { ArrowRight, CheckCircle2, GitBranch, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+
+const BENEFITS = [
+  { icon: GitBranch, title: "One traceable ledger", copy: "See the complete path from processor event to settled bank deposit." },
+  { icon: ShieldCheck, title: "Explainable decisions", copy: "Every relationship keeps confidence, evidence, and an audit trail." },
+  { icon: CheckCircle2, title: "Humans where needed", copy: "Deterministic rules handle the clear cases; your team reviews the rest." },
+];
 
 export function LandingHero() {
   return (
-    <section className="px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-14">
-      <div className="relative mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-10">
-        <div className="flex flex-col items-start">
-          <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight sm:text-6xl">
-            Verify every payment event, traced to the bank.
-          </h1>
-          <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground">
-            Import processor and bank activity, run deterministic reconciliation, and review only the relationships that need judgment.
-          </p>
-        </div>
-        <a
-          href="https://github.com/fozagtx/DriftRecon"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Open DriftRecon on GitHub"
-          className="absolute left-1/2 top-1/2 hidden h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring md:inline-flex"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-current">
-            <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.46-1.15-1.11-1.46-1.11-1.46-.91-.61.07-.6.07-.6 1 .07 1.54 1.04 1.54 1.04.9 1.53 2.34 1.08 2.91.83.09-.65.35-1.08.64-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.55 9.55 0 0 1 5 0c1.9-1.29 2.74-1.02 2.74-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.9.68 1.81v2.68c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
-          </svg>
-        </a>
-        <div className="relative min-h-[22rem] overflow-hidden rounded-2xl p-7 sm:min-h-[26rem] sm:p-8">
-          <img
-            src="/hero/container.jpg"
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-[#111111]/30" />
-          <div className="relative flex h-full min-h-[20rem] items-center sm:min-h-[24rem]">
+    <main>
+      <section className="px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-24">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-16">
+          <div className="flex flex-col items-start">
+            <p className="inline-flex rounded-full border border-[hsl(157,42%,75%)] bg-[hsl(151,45%,94%)] px-3 py-1 font-mono text-xs font-medium uppercase tracking-[0.12em] text-[hsl(157,54%,25%)]">Revenue reconciliation, resolved</p>
+            <h1 className="mt-6 max-w-[12ch] text-5xl font-semibold leading-[1.04] tracking-[-0.04em] sm:text-6xl lg:text-7xl">Every payment, accounted for.</h1>
+            <p className="mt-6 max-w-[35em] text-lg leading-8 text-muted-foreground">Connect processor activity to bank deposits with a deterministic reconciliation engine—and send only ambiguous relationships to a human.</p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <Link href="/dashboard" className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-[0_1px_3px_hsla(0,0%,0%,.2)] hover:bg-[hsl(157,54%,20%)]">Explore the workspace <ArrowRight className="h-4 w-4" /></Link>
+              <a href="https://github.com/fozagtx/DriftRecon" target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center rounded-lg px-4 text-sm font-semibold text-foreground hover:bg-secondary">View on GitHub</a>
+            </div>
+            <p className="mt-6 text-sm text-muted-foreground">No account required · Example data included</p>
+          </div>
+          <div className="relative rounded-2xl bg-[hsl(220,28%,13%)] p-4 shadow-[0_15px_35px_hsla(220,28%,10%,.2)] sm:p-8">
+            <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-accent/20 blur-2xl" />
             <HowCard />
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <section className="border-y bg-white px-4 py-16 sm:px-6">
+        <div className="mx-auto max-w-6xl">
+          <p className="font-mono text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Built for financial clarity</p>
+          <div className="mt-8 grid gap-8 md:grid-cols-3">
+            {BENEFITS.map(({ icon: Icon, title, copy }) => <article key={title} className="border-t-2 border-primary pt-6"><span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[hsl(151,45%,94%)] text-primary"><Icon className="h-5 w-5" /></span><h2 className="mt-5 text-lg font-semibold">{title}</h2><p className="mt-2 max-w-[30em] text-sm leading-6 text-muted-foreground">{copy}</p></article>)}
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
