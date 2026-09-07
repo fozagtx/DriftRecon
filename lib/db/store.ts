@@ -173,6 +173,24 @@ export async function saveDecision(decision: HumanDecision): Promise<void> {
   await upsertRow("decisions", decision.id, decision);
 }
 
+/** Persist the human's verdict on both sides of a review case immediately. */
+export async function saveReviewOutcome(
+  exception: ExceptionRecord,
+  edge: MatchEdge | undefined,
+  action: HumanDecision["action"],
+): Promise<void> {
+  await upsertRow("exceptions", exception.id, {
+    ...exception,
+    status: action === "approve" ? "approved" : action === "reject" ? "rejected" : "unresolved",
+  });
+  if (edge && action !== "unresolved") {
+    await upsertRow("edges", edge.id, {
+      ...edge,
+      status: action === "approve" ? "approved" : "rejected",
+    });
+  }
+}
+
 export async function listRuns(): Promise<ReconciliationRun[]> {
   const client = await ensureSchema();
   const rows = await client`SELECT payload FROM runs ORDER BY payload->>'ranAt' DESC`;

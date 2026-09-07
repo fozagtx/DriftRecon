@@ -16,7 +16,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
   const eventsById = useMemo(() => new Map(data.events.map((event) => [event.id, event])), [data.events]);
   const edgesById = useMemo(() => new Map(data.edges.map((edge) => [edge.id, edge])), [data.edges]);
   const open = useMemo(
-    () => data.exceptions.filter((item) => item.status === "open" || item.status === "unresolved"),
+    () => data.exceptions.filter((item) => item.status === "open"),
     [data.exceptions],
   );
   const [selectedId, setSelectedId] = useState(open[0]?.id ?? null);
@@ -45,7 +45,17 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
     return (
       <section className="border border-dashed border-border bg-card p-8">
         <h2 className="text-base font-medium">Review queue empty</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Run reconciliation from Overview first.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Import data and run reconciliation from Overview first.</p>
+      </section>
+    );
+  }
+
+  if (!data.run) {
+    return (
+      <section className="border border-dashed border-border bg-card p-8">
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Human approval</p>
+        <h2 className="mt-2 text-xl font-medium">Reconciliation has not run</h2>
+        <p className="mt-2 text-sm text-muted-foreground">Your events are imported. Run reconciliation from Overview to create review cases.</p>
       </section>
     );
   }
@@ -53,7 +63,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
   return (
     <div className="flex flex-col gap-6">
       <section>
-        <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Review</p>
+        <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Human approval</p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">
           {open.length} open {open.length === 1 ? "case" : "cases"}
         </h2>

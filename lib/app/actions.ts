@@ -17,6 +17,7 @@ import {
   saveDecision,
   saveGroundTruth,
   savePolicy,
+  saveReviewOutcome,
   upsertEvent,
 } from "../db/store";
 import { isLeftoverAcmeSeed, loadAcmeDataset } from "../ingestion/load-acme";
@@ -249,6 +250,7 @@ export async function reviewException(exceptionId: string, action: "approve" | "
     policyId,
     decidedAt,
   });
+  await saveReviewOutcome(exception, edge, action);
 
   return { decisionId, policyId };
 }
