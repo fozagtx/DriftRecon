@@ -73,7 +73,12 @@ export function Overview({ data }: { data: Snapshot }) {
                 </div>
                 <Table>
                   <TableHeader><TableRow className="hover:bg-transparent"><Head>Source</Head><Head align="right">Events</Head><Head>Status</Head></TableRow></TableHeader>
-                  <TableBody>{SOURCES.map((source) => <TableRow key={source}><TableCell className="capitalize">{source}</TableCell><Num>{counts.get(source) ?? 0}</Num><TableCell><span className="font-mono text-[10px] uppercase tracking-wider text-reconciled">Imported</span></TableCell></TableRow>)}</TableBody>
+                  <TableBody>
+                    {SOURCES.map((source) => {
+                      const count = counts.get(source) ?? 0;
+                      return <TableRow key={source}><TableCell className="capitalize">{source}</TableCell><Num>{count}</Num><TableCell><span className={`font-mono text-[10px] uppercase tracking-wider ${count > 0 ? "text-reconciled" : "text-muted-foreground"}`}>{count > 0 ? "Imported" : "Not imported"}</span></TableCell></TableRow>;
+                    })}
+                  </TableBody>
                 </Table>
               </CardContent>
             </Card>
