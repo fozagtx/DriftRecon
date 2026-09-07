@@ -28,18 +28,6 @@
   </header>
   <p class="hint">Upload <code>data/judges-test.json</code> on Overview.</p>
   <ImportPanel canReconcile={has}/>
-  <div class="metrics card">
-   <article><span>Value</span><strong>{has ? money(d.overview.totalFinancialValue) : '—'}</strong></article>
-   <article><span>Reconciled</span><strong>{d.run ? money(d.overview.reconciledValue) : '—'}</strong></article>
-   <article><span>Unresolved</span><strong>{d.run ? money(d.overview.unresolvedValue) : '—'}</strong></article>
-   <article><span>Coverage</span><strong>{d.run ? pct(d.overview.autonomousCoverage) : '—'}</strong></article>
-   <div class="counts">
-    <p><RefreshCw/> Tx <b>{d.overview.transactionCount}</b></p>
-    <p><Landmark/> Payouts <b>{d.overview.payoutCount}</b></p>
-    <p><Landmark/> Deposits <b>{d.overview.bankDepositCount}</b></p>
-    <p><CircleAlert/> Exceptions <b>{d.run ? d.overview.exceptionCount : '—'}</b></p>
-   </div>
-  </div>
   <section class="lower">
    <div class="card sources">
     <header><h2>Sources</h2><span>{d.events.length}</span></header>
@@ -62,6 +50,18 @@
     {#if d.run}<a href="/review">Open <ArrowRight size={15}/></a>{:else}<div>Open <ArrowRight size={15}/></div>{/if}
    </aside>
   </section>
+  <div class="metrics card">
+   <article><span>Value</span><strong>{has ? money(d.overview.totalFinancialValue) : '—'}</strong></article>
+   <article><span>Reconciled</span><strong>{d.run ? money(d.overview.reconciledValue) : '—'}</strong></article>
+   <article><span>Unresolved</span><strong>{d.run ? money(d.overview.unresolvedValue) : '—'}</strong></article>
+   <article><span>Coverage</span><strong>{d.run ? pct(d.overview.autonomousCoverage) : '—'}</strong></article>
+   <div class="counts">
+    <p><RefreshCw/> Tx <b>{d.overview.transactionCount}</b></p>
+    <p><Landmark/> Payouts <b>{d.overview.payoutCount}</b></p>
+    <p><Landmark/> Deposits <b>{d.overview.bankDepositCount}</b></p>
+    <p><CircleAlert/> Exceptions <b>{d.run ? d.overview.exceptionCount : '—'}</b></p>
+   </div>
+  </div>
  </div>
 </Shell>
 <style>
