@@ -18,4 +18,14 @@ describe('Svelte product UI', () => {
     expect(panel).toContain("request('/api/sample')");
     expect(panel).toContain('Loading and reconciling…');
   });
+
+  it('renders the actual reconciliation edges instead of a sliced event preview', () => {
+    const page = read('src/routes/graph/+page.svelte');
+    const graph = read('src/lib/components/TransactionGraph.svelte');
+    expect(page).toContain('edges={snapshot.edges}');
+    expect(graph).toContain('edges.filter');
+    expect(graph).toContain('edge.fromEventId');
+    expect(graph).toContain('edge.toEventId');
+    expect(graph).not.toContain('.slice(0,5)');
+  });
 });
