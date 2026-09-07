@@ -1,38 +1,32 @@
 # DriftRecon
 
-Reconciles Stripe, Gumroad, Dodo, and bank activity into one ledger, then traces each sale through fees, refunds, disputes, and FX to the processor payout and the bank deposit.
-
 Live app: [https://driftrecon.onrender.com](https://driftrecon.onrender.com)
 
-Autonomous Office of the CFO. Core rule: code calculates, the Recon Agent investigates exceptions, a human decides anything uncertain.
+Stripe, Gumroad, Dodo, and the bank do not share one record. A June Stripe sale can refund in July. A EUR sale can settle as USD. Several sales can land in one payout. A payout can fail to match the deposit.
+
+DriftRecon imports those CSVs into one ledger, traces each sale through fees, refunds, disputes, and FX to the processor payout and the bank deposit, then asks a human only when the match is uncertain. Code calculates. The Recon Agent investigates. A human decides.
 
 ## For judges
 
-The check is the live app. Download this pack and upload it on Overview:
+The check is the live app. Download these CSVs, drop them on Overview, click **Run**:
 
-**[data/judges-test.json](https://github.com/fozagtx/DriftRecon/raw/main/data/judges-test.json)**
+- [stripe.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/stripe.csv)
+- [gumroad.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/gumroad.csv)
+- [bank.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/bank.csv)
+- [dodo.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/dodo.csv)
+- [ground-truth.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/ground-truth.csv) — Evaluation only, never used during matching
 
-That file is Stripe, Dodo Payments, Gumroad, bank, and ground truth together. Drop it on **Drop files here**, then click **Run**. Graph, Review, and Evaluation use that same imported data.
-
-There is no in-app “load sample” button.
+Graph, Review, and Evaluation use that same import. There is no in-app sample button.
 
 ## What it does
 
-Payment platforms and the bank do not share one record. A June Stripe sale can refund in July. A EUR sale can settle as USD. Several sales can land in one payout. A payout can fail to match the deposit.
-
-DriftRecon imports those rows into one `LedgerEvent` model. Amounts stay in integer minor units (`$10.50` is `1050`). Invalid CSV or webhook rows are stored, not dropped. Imported amounts are never rewritten.
-
-The engine then builds a graph of relationships: `belongs_to`, `refunds`, `disputes`, `settles_into`, `converts_into`, `deposited_as`. Related events stay linked across accounting periods.
+Amounts stay in integer minor units (`$10.50` is `1050`). Invalid rows are stored, not dropped. Imported amounts are never rewritten.
 
 Matching order is fixed:
 
 1. Exact external / parent / payout references (confidence `1.00`)
 2. Human-approved policies
-3. Structured score
-
-```text
-reference × 0.40 + amount × 0.25 + timing × 0.15 + currency × 0.10 + metadata × 0.10
-```
+3. Structured score: `reference × 0.40 + amount × 0.25 + timing × 0.15 + currency × 0.10 + metadata × 0.10`
 
 Payout math is TypeScript only:
 
@@ -41,19 +35,13 @@ Payout math is TypeScript only:
 processor payout ≈ bank deposit   (demo tolerance 1 cent)
 ```
 
-Confidence gates:
-
 | Confidence | Result |
 | ---: | --- |
 | `≥ 0.95` | Auto-match only if payout invariants pass |
 | `0.70 – 0.9499` | Review queue |
 | `< 0.70` | Unresolved |
 
-The Recon Agent can inspect events, candidates, policies, and deterministic tool results (`get_event`, `find_events`, `calculate_chain`, `validate_payout`, `propose_match`, `request_human_review`). It cannot change amounts, invent rows, override a failed invariant, or approve its own case. TensorMux is optional inference. Missing keys still run the deterministic tools. Invalid TensorMux JSON is an execution error.
-
-Approve on Review creates a constrained policy. The next run applies that policy before structured scoring. Evaluation scores this run against held-out ground truth and a same-period baseline (amount, currency, date; no graph, agent, or policies).
-
-## Money chain
+The Recon Agent can inspect events and tool results. It cannot change amounts, invent rows, override a failed invariant, or approve its own case. Approve on Review writes a constrained policy. The next run applies that policy before scoring.
 
 ```mermaid
 flowchart TD
@@ -68,110 +56,30 @@ flowchart TD
   payout --> bank[Bank deposit]
 ```
 
-## Pipeline
+## Sponsors
 
-```mermaid
-flowchart TD
-  src[Stripe CSV / Gumroad CSV / Dodo webhook / Bank CSV] --> ledger[LedgerEvent]
-  ledger --> exact[Exact references]
-  exact --> policies[Approved policies]
-  policies --> score[Structured score]
-  score --> chain[Build chains]
-  chain --> inv[Payout invariants]
-  inv -->|confidence ≥ 0.95 and balanced| auto[Auto-match]
-  inv -->|0.70 to 0.9499| agent[Recon Agent investigates]
-  inv -->|below 0.70| open[Unresolved]
-  agent --> review[Human review]
-  review -->|approve| policy[Save policy]
-  review -->|reject| rejected[Rejected edge]
-  review -->|unresolved| open
-  policy --> exact
-```
+| Sponsor | How DriftRecon uses it |
+| --- | --- |
+| [Stripe](https://stripe.com) | Sale, fee, refund, dispute, FX, and payout rows from `stripe.csv` |
+| [Dodo Payments](https://dodopayments.com) | The same kinds of rows from `dodo.csv`, plus a live webhook at `POST /api/webhooks/dodo` |
+| [Gumroad](https://gumroad.com) | Sale, fee, and payout rows from `gumroad.csv` |
+| [Chase](https://www.chase.com) / bank export | Deposit rows from `bank.csv`, matched to processor payouts |
+| [Neon](https://neon.tech) | Postgres for the ledger, graph, exceptions, and policies |
+| [TensorMux](https://tensormux.com) | Optional Recon Agent inference. Missing key still runs the deterministic tools |
+| [Neatlogs](https://neatlogs.com) | Optional traces of agent tool calls |
 
 ## Required learning case
 
-June Stripe sale `+$1000`. July refund `−$200`. First run raises a cross-period exception. The agent finds the sale and shows evidence. A human approves. A refund policy is stored. The next run attaches the same pattern automatically and records the policy ID on the edge.
-
-```mermaid
-sequenceDiagram
-  participant Data as Acme dataset
-  participant Engine as Reconciliation engine
-  participant Agent as Recon Agent
-  participant Human as Review queue
-  Data->>Engine: June sale + July refund
-  Engine->>Agent: cross_period_adjustment
-  Agent->>Human: sale + evidence
-  Human->>Engine: approve
-  Engine->>Engine: write policy
-  Human->>Engine: Run Reconciliation again
-  Engine->>Engine: policy matches refund to sale
-```
-
-## Screens
-
-| Route | What you see |
-| --- | --- |
-| Landing `/` | Hero + **Launch app** |
-| Overview `/dashboard` | Totals, exceptions, imported rows, **Run Reconciliation** |
-| Graph `/graph` | Sale-to-bank graph (native SVG + Svelte) |
-| Review `/review` | Agent evidence. Approve, reject, or leave unresolved |
-| Evaluation `/evaluation` | Precision, recall, payout coverage, residuals, false auto-matches vs baseline |
+June Stripe sale `+$1000`. July refund `−$200`. First run raises a cross-period exception. A human approves. A refund policy is stored. The next run attaches the same pattern automatically.
 
 ## Setup
 
-Needs Node 20+ and a Neon Postgres database (project **DriftRecon**).
+The live app is already running. To run a copy: Node 20+, Neon project **DriftRecon**, and `.env.local` with secrets only. Host, database, role, TensorMux URL, and Neatlogs URL live in `lib/config.ts`.
 
-Create `.env.local` with secrets only. TensorMux URL, model, and Neatlogs URL stay in `lib/config.ts`.
-
-```bash
+```
 NEON_PASSWORD=
 TENSORMUX_API_KEY=
 NEATLOGS_API_KEY=
 ```
 
-`NEON_PASSWORD` is the Neon role password. Host, database, and role live in `lib/config.ts`. The two API keys are optional.
-
-```bash
-npm install
-npm test
-npm run dev
-```
-
-`npm run dev` starts the SvelteKit app. Open the landing page, click **Open workspace**, then drop [data/judges-test.json](https://github.com/fozagtx/DriftRecon/raw/main/data/judges-test.json) on Overview.
-
-### Render
-
-Service: [https://driftrecon.onrender.com](https://driftrecon.onrender.com)
-
-Set only:
-
-- `NEON_PASSWORD`
-- `TENSORMUX_API_KEY`
-- `NEATLOGS_API_KEY`
-
-Do not set `TENSORMUX_MODEL`, `TENSORMUX_BASE_URL`, or `NEATLOGS_ENDPOINT`.
-
 Health: [https://driftrecon.onrender.com/api/health](https://driftrecon.onrender.com/api/health)
-
-Dodo webhook: `POST /api/webhooks/dodo`
-
-## Technology
-
-The application is built with **SvelteKit and Svelte 5**, TypeScript, and the Node adapter. Server-rendered workspace routes read from the existing deterministic reconciliation engine; Svelte client interactions handle import, reconciliation, review decisions, and the interactive money map.
-
-## Commands
-
-```bash
-npm install
-npm test
-npm run dev
-npm run check
-npm run build
-npm start
-```
-
-## Dataset
-
-Download: **[data/judges-test.json](https://github.com/fozagtx/DriftRecon/raw/main/data/judges-test.json)**
-
-The same records also live as `stripe.csv`, `gumroad.csv`, `bank.csv`, `dodo-events.json`, and `ground-truth.json`. Ground truth is used on Evaluation only, never during matching.

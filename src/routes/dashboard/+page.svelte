@@ -26,7 +26,7 @@
    <h1>Overview</h1>
    <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
   </header>
-  <p class="hint">Upload <code>data/judges-test.json</code> on Overview.</p>
+  <p class="hint">Drop <code>stripe.csv</code>, <code>gumroad.csv</code>, <code>bank.csv</code>, and <code>dodo.csv</code>. Optional: <code>ground-truth.csv</code> for Evaluation.</p>
   <ImportPanel canReconcile={has}/>
   <section class="lower">
    <div class="card sources">

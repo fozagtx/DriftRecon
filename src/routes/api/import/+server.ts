@@ -17,13 +17,12 @@ function truth(text: string) {
 function classify(name: string, text: string): Kind {
   const n = name.toLowerCase();
   const t = text.trim();
-  if (n.endsWith('.json') || t.startsWith('{') || t.startsWith('[')) return n.includes('truth') || truth(t) ? 'groundTruth' : 'dodo';
-  if (n.includes('gumroad')) return 'gumroad';
-  if (n.includes('bank') || n.includes('chase')) return 'bank';
-  if (n.includes('stripe')) return 'stripe';
-  const h = (text.split(/\r?\n/, 1)[0] ?? '').toLowerCase();
-  if (h.includes('sale_id') || h.includes('email')) return 'gumroad';
-  if (h.includes('reference') || (h.includes('date') && !h.includes('type'))) return 'bank';
+  const h = (t.split(/\r?\n/, 1)[0] ?? '').toLowerCase();
+  if (n.includes('truth') || h.includes('fromeventid') || truth(t)) return 'groundTruth';
+  if (n.includes('dodo')) return 'dodo';
+  if (n.endsWith('.json') || t.startsWith('{') || t.startsWith('[')) return 'dodo';
+  if (n.includes('gumroad') || h.includes('sale_id') || h.includes('email')) return 'gumroad';
+  if (n.includes('bank') || n.includes('chase') || (h.includes('reference') && !h.includes('type'))) return 'bank';
   return 'stripe';
 }
 

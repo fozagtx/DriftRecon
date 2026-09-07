@@ -24,7 +24,8 @@ import { isLeftoverAcmeSeed, loadAcmeDataset } from "../ingestion/load-acme";
 import { runBaseline } from "../evaluation/baseline";
 import { evaluatePredictions } from "../evaluation/metrics";
 import { parseBankCsv } from "../ingestion/bank";
-import { parseDodoEvents } from "../ingestion/dodo";
+import { parseCsv } from "../ingestion/csv";
+import { parseDodoCsv, parseDodoEvents } from "../ingestion/dodo";
 import { parseGumroadCsv } from "../ingestion/gumroad";
 import { parseStripeCsv } from "../ingestion/stripe";
 import { policyFromApproval } from "../policies/from-decision";
@@ -43,15 +44,30 @@ const groundTruthSchema = z.array(
 );
 
 export function parseGroundTruth(text: string): GroundTruthEdge[] {
+  const header = (text.split(/\r?\n/, 1)[0] ?? "").toLowerCase();
+  if (header.includes("fromeventid")) {
+    const { rows } = parseCsv(text);
+    const result = groundTruthSchema.safeParse(
+      rows.map((row) => ({
+        fromEventId: row.fromEventId || row.from_event_id,
+        toEventId: row.toEventId || row.to_event_id,
+        relationship: row.relationship,
+      })),
+    );
+    if (!result.success) {
+      throw new Error("Ground truth CSV must have fromEventId, toEventId, relationship.");
+    }
+    return result.data;
+  }
   let payload: unknown;
   try {
     payload = JSON.parse(text);
   } catch {
-    throw new Error("Ground truth file must be JSON.");
+    throw new Error("Ground truth file must be CSV.");
   }
   const result = groundTruthSchema.safeParse(payload);
   if (!result.success) {
-    throw new Error("Ground truth must be an array of { fromEventId, toEventId, relationship }.");
+    throw new Error("Ground truth must be rows of fromEventId, toEventId, relationship.");
   }
   return result.data;
 }
@@ -64,7 +80,7 @@ export async function importUploads(files: {
   groundTruth?: string;
 }) {
   if (!files.stripe && !files.gumroad && !files.bank && !files.dodo) {
-    throw new Error("Upload a Stripe, Gumroad, or bank CSV, or a Dodo JSON file.");
+    throw new Error("Upload Stripe, Gumroad, bank, or Dodo CSV.");
   }
   const groundTruth = files.groundTruth ? parseGroundTruth(files.groundTruth) : [];
 
@@ -91,19 +107,16 @@ export async function importUploads(files: {
   }
   if (files.dodo) {
     replaced.add("dodo");
-    let payload: unknown;
-    try {
-      payload = JSON.parse(files.dodo);
-    } catch {
-      throw new Error("Dodo file must be JSON.");
-    }
-    const parsed = parseDodoEvents(payload);
+    const trimmed = files.dodo.trim();
+    const parsed = trimmed.startsWith("{") || trimmed.startsWith("[")
+      ? parseDodoEvents(JSON.parse(files.dodo))
+      : parseDodoCsv(files.dodo);
     incoming.events.push(...parsed.events);
     incoming.invalidRows.push(...parsed.invalidRows);
   }
 
   if (incoming.events.length === 0) {
-    throw new Error("No supported payment or bank records were found. Upload a Stripe, Gumroad, or bank CSV, or Dodo JSON.");
+    throw new Error("No payment or bank rows found. Upload Stripe, Gumroad, bank, or Dodo CSV.");
   }
 
   await clearLedger();

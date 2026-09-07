@@ -1,0 +1,9 @@
+drift_id,type,amount,currency,fee,net,payment_id,parent_ref,payout_id,created,description
+evt_sale_dodo_60,sale,60.00,usd,1.80,58.20,pay_dodo_60,,po_dodo_june,2026-06-14T12:00:00Z,Dodo digital download
+evt_fee_dodo_60,fee,1.80,usd,,,fee_dodo_60,pay_dodo_60,po_dodo_june,2026-06-14T12:00:10Z,Dodo fee
+evt_payout_dodo,payout,58.20,usd,,,po_dodo_june,,po_dodo_june,2026-06-27T18:00:00Z,Dodo June payout
+evt_sale_dodo_35,sale,35.00,usd,1.23,33.77,pay_dodo_35,,po_dodo_july,2026-06-16T12:00:00Z,Dodo course add-on
+evt_fee_dodo_35,fee,1.23,usd,,,fee_dodo_35,pay_dodo_35,po_dodo_july,2026-06-16T12:00:10Z,Dodo fee
+evt_refund_dodo_10,refund,10.00,usd,,,ref_dodo_10,pay_dodo_35,po_dodo_july,2026-07-05T12:00:00Z,Dodo partial refund
+evt_dispute_dodo,dispute,8.00,usd,,,dp_dodo_08,pay_dodo_35,po_dodo_july,2026-07-09T12:00:00Z,Dodo dispute
+evt_payout_dodo_july,payout,15.77,usd,,,po_dodo_july,,po_dodo_july,2026-07-27T18:00:00Z,Dodo July payout
