@@ -26,20 +26,14 @@
 <Shell>
   <div class="dashboard">
     <header class="page-head">
-      <div>
-        <h1>Overview</h1>
-      </div>
+      <h1>Overview</h1>
       <span class="status-pill">
-        <i class:amber={stale}></i>
-        {stale ? 'Stale' : d.run ? 'Current' : has ? 'Ready to reconcile' : 'Idle'}
+        <i class:amber={stale || !!d.error}></i>
+        {d.error ? 'Database unavailable' : stale ? 'Stale' : d.run ? 'Current' : has ? 'Ready to reconcile' : 'Idle'}
       </span>
     </header>
 
     <ImportPanel canReconcile={has} />
-
-    {#if d.error}
-      <p class="notice bad">{d.error}</p>
-    {/if}
 
     <div class="metrics card">
       <article><span>Value</span><strong>{has ? money(d.overview.totalFinancialValue) : '—'}</strong></article>
@@ -121,7 +115,7 @@
 </Shell>
 
 <style>
-  .dashboard { display: flex; flex-direction: column; gap: 14px; }
+  .dashboard { display: flex; flex-direction: column; gap: 14px; flex: 1; }
   .status-pill i.amber { background: var(--amber); }
   .notice { margin: 0; font-size: 13px; }
   .metrics { display: grid; grid-template-columns: repeat(4, 1fr); overflow: hidden; }
