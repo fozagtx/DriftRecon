@@ -14,6 +14,7 @@ import {
   loadGroundTruth,
   replaceEvents,
   replaceGraph,
+  restoreRunArchive,
   saveDecision,
   saveGroundTruth,
   savePolicy,
@@ -223,6 +224,14 @@ export async function reconcile() {
   }
 
   await replaceGraph(result.edges, traced, result.run);
+  return await snapshot();
+}
+
+export async function activateRun(runId: string) {
+  const restored = await restoreRunArchive(runId);
+  if (!restored) {
+    throw new Error("That run has no stored graph to open.");
+  }
   return await snapshot();
 }
 

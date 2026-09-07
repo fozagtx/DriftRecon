@@ -168,6 +168,18 @@ export interface ReconciliationRun {
   exceptionCount: number;
   autoCount: number;
   reviewCount: number;
+  archived?: boolean;
+}
+
+export interface RunArchive {
+  run: ReconciliationRun;
+  events: LedgerEvent[];
+  invalidRows: InvalidRow[];
+  edges: MatchEdge[];
+  exceptions: ExceptionRecord[];
+  policies: ReconciliationPolicy[];
+  decisions: HumanDecision[];
+  groundTruth: GroundTruthEdge[];
 }
 
 export interface OverviewMetrics {
