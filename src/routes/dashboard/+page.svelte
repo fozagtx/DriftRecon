@@ -74,7 +74,7 @@
  .counts p{margin:0;padding:9px 14px;display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;border-right:1px solid var(--line)}
  .counts :global(svg){width:13px}
  .counts b{margin-left:auto;color:var(--ink);font:500 11px 'IBM Plex Mono'}
- .lower{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px}
+ .lower{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px;align-items:start}
  .sources{overflow:hidden}
  .sources header{display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
  .sources h2{font-size:14px;margin:0}
@@ -87,7 +87,7 @@
  .review-card{padding:16px;display:flex;flex-direction:column}
  .review-card>span{font:9px 'IBM Plex Mono';text-transform:uppercase;color:var(--muted);letter-spacing:.12em}
  .review-card>strong{font:500 28px 'IBM Plex Mono';margin:8px 0 16px}
- .review-card a,.review-card>div{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px;font-weight:650}
+ .review-card a,.review-card>div{padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:12px;font-weight:650}
  .review-card>div{color:#9ba39e}
  @media(max-width:1000px){.lower{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.metrics article{border-bottom:1px solid var(--line)}}
  @media(max-width:600px){.metrics article strong{font-size:17px}.counts{grid-template-columns:repeat(2,1fr)}}
