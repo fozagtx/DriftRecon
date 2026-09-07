@@ -31,7 +31,7 @@
  .bar>img.dodo{height:20px;width:20px;border-radius:50%;object-fit:cover}
  .bar>img.icon{height:18px}
  .bar label{position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:12px;font-weight:650;cursor:pointer;white-space:nowrap}
- .bar input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+ .bar input{position:absolute;width:1px;height:1px;padding:0;border:0;overflow:hidden;clip:rect(0,0,0,0)}
  .bar .btn{min-height:36px;padding:0 14px;font-size:12px}
  .notice{margin:0;font-size:12px;display:flex;align-items:center;gap:6px}
  .spin{display:inline-flex;animation:spin 1s linear infinite}
