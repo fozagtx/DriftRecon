@@ -2,8 +2,9 @@
 
 import { RunButton } from "@/components/run-button";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { FlaskConical } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle2, FlaskConical, Upload } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
 
@@ -111,8 +112,8 @@ export function ImportPanel({
 
   return (
     <div className="flex w-full flex-col gap-5">
-      <Card className="rounded-xl border py-0">
-        <CardContent className={compact ? "p-3" : "p-5"}>
+      <Card className="overflow-hidden rounded-xl border py-0 shadow-[0_1px_2px_hsla(220,28%,10%,.05)]">
+        <CardContent className={compact ? "p-0" : "p-5"}>
           <label
             htmlFor="import-files"
             onDragEnter={(event) => {
@@ -129,13 +130,15 @@ export function ImportPanel({
               setIsDragging(false);
               upload(event.dataTransfer.files);
             }}
-            className={`flex w-full cursor-pointer items-center justify-between border border-dashed text-left transition-colors focus-within:ring-2 focus-within:ring-ring ${
-              compact ? "min-h-20 flex-col gap-3 px-4 py-3 sm:flex-row sm:gap-4" : "min-h-48 flex-col justify-center gap-3 px-5 py-6 text-center"
+            className={`flex w-full cursor-pointer items-center justify-between text-left transition-colors focus-within:ring-2 focus-within:ring-inset focus-within:ring-ring ${
+              compact ? "min-h-[4.5rem] gap-3 px-4 py-3 sm:gap-4" : "min-h-48 flex-col justify-center gap-3 border border-dashed px-5 py-6 text-center"
             } ${
-              isDragging ? "border-primary bg-secondary" : "border-black/25 hover:border-primary hover:bg-secondary/50"
+              isDragging ? "bg-secondary" : "hover:bg-secondary/40"
             }`}
           >
-            <img src="/logos/excel.svg" alt="" className={compact ? "h-9 w-9 shrink-0" : "h-12 w-12"} />
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-secondary text-primary">
+              {compact ? <Upload className="h-4 w-4" aria-hidden="true" /> : <Image src="/logos/excel.svg" alt="" width={48} height={48} className="h-12 w-12" />}
+            </span>
             <div className={compact ? "min-w-0 flex-1" : "contents"}>
               <p className="text-sm font-medium text-foreground">
                 {state === "uploading" ? "Importing files…" : "Upload source files"}
@@ -143,7 +146,7 @@ export function ImportPanel({
               <p className="mt-1 text-xs text-muted-foreground">Stripe, Gumroad, Dodo, or bank · CSV and JSON</p>
             </div>
             <span
-              className={`inline-flex min-h-10 shrink-0 items-center bg-primary px-4 text-sm font-medium text-primary-foreground ${
+              className={`inline-flex min-h-9 shrink-0 items-center rounded-lg border bg-card px-3.5 text-xs font-semibold text-foreground shadow-sm ${
                 busy ? "invisible" : ""
               }`}
             >
@@ -165,16 +168,25 @@ export function ImportPanel({
               }}
             />
           </label>
-          {error ? <p className="mt-3 text-center text-sm text-destructive">{error}</p> : null}
-          {importedCount !== null ? <p className="mt-3 text-center text-sm text-reconciled">{importedCount} events imported.</p> : null}
+          {error ? <p className="border-t px-4 py-2.5 text-sm text-destructive">{error}</p> : null}
+          {importedCount !== null ? <p className="flex items-center gap-2 border-t px-4 py-2.5 text-xs text-reconciled"><CheckCircle2 className="h-3.5 w-3.5" />{importedCount} events imported and ready to reconcile.</p> : null}
+          {compact ? (
+            <div className="flex flex-col items-start justify-between gap-3 border-t border-border bg-secondary/25 px-4 py-3 sm:flex-row sm:items-center">
+              <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={loadSample} className="-ml-2 text-muted-foreground">
+                <FlaskConical aria-hidden="true" />
+                {state === "sampling" ? "Loading example…" : "Reset to Acme example"}
+              </Button>
+              {redirectAfterUpload ? null : <RunButton compact disabled={!canReconcile || busy} />}
+            </div>
+          ) : null}
         </CardContent>
-        <CardFooter className={`flex items-center justify-between gap-3 border-t border-border bg-transparent ${compact ? "px-4 py-3" : "px-5 py-4"}`}>
+        {!compact ? <div className="flex items-center justify-between gap-3 border-t border-border bg-transparent px-5 py-4">
           <Button type="button" variant="ghost" size="sm" disabled={busy} onClick={loadSample}>
             <FlaskConical aria-hidden="true" />
             {state === "sampling" ? "Loading example…" : "Load Acme example"}
           </Button>
           {redirectAfterUpload ? null : <RunButton disabled={!canReconcile || busy} />}
-        </CardFooter>
+        </div> : null}
       </Card>
       {showSources ? (
         <div className="flex items-center justify-center gap-x-5">
@@ -182,7 +194,7 @@ export function ImportPanel({
           <ul className="flex items-center gap-x-5" aria-label="Supported sources">
             {SOURCE_LOGOS.map((logo) => (
               <li key={logo.src}>
-                <img src={logo.src} alt={logo.alt} className="h-5 w-auto" />
+                <Image src={logo.src} alt={logo.alt} width={64} height={20} className="h-5 w-auto" />
               </li>
             ))}
           </ul>

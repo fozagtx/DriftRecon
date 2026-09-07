@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function RunButton({ disabled = false }: { disabled?: boolean }) {
+export function RunButton({ disabled = false, compact = false }: { disabled?: boolean; compact?: boolean }) {
   const router = useRouter();
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
 
@@ -26,12 +26,12 @@ export function RunButton({ disabled = false }: { disabled?: boolean }) {
         type="button"
         onClick={run}
         disabled={disabled || state === "loading"}
-        size="lg"
+        size={compact ? "sm" : "lg"}
       >
         {state === "loading" ? "Running…" : "Run Reconciliation"}
       </Button>
       {state === "error" ? (
-        <p className="text-sm text-destructive">Reconciliation failed. Retry.</p>
+        <p className={compact ? "text-xs text-destructive" : "text-sm text-destructive"}>Reconciliation failed. Retry.</p>
       ) : null}
     </div>
   );
