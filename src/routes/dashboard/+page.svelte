@@ -25,6 +25,7 @@
   <header class="page-head">
    <h1>Overview</h1>
    <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
+   <a class="past" href="/runs">Runs</a>
   </header>
   <p class="hint">Drop <code>stripe.csv</code>, <code>gumroad.csv</code>, <code>bank.csv</code>, and <code>dodo.csv</code>. Optional: <code>ground-truth.csv</code> for Evaluation.</p>
   <ImportPanel canReconcile={has}/>
@@ -69,6 +70,7 @@
  .hint{margin:0;color:var(--muted);font-size:13px}
  .hint code{font:12px 'IBM Plex Mono';background:#efefe8;padding:1px 5px;border-radius:4px}
  .status-pill i.amber{background:var(--amber)}
+ .past{margin-left:auto;font-size:12px;font-weight:650;color:var(--muted)}
  .metrics{display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}
  .metrics article{padding:16px;border-right:1px solid var(--line)}
  .metrics article span{display:block;font:9px 'IBM Plex Mono';text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}

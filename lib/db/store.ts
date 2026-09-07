@@ -233,7 +233,5 @@ export async function clearLedger(): Promise<void> {
   await client`DELETE FROM exceptions`;
   await client`DELETE FROM policies`;
   await client`DELETE FROM decisions`;
-  await client`DELETE FROM runs`;
   await client`DELETE FROM meta WHERE key IN ('ground_truth', 'latest_run')`;
-  await client`DELETE FROM meta`;
 }
