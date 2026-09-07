@@ -16,7 +16,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
   const eventsById = useMemo(() => new Map(data.events.map((event) => [event.id, event])), [data.events]);
   const edgesById = useMemo(() => new Map(data.edges.map((edge) => [edge.id, edge])), [data.edges]);
   const open = useMemo(
-    () => data.exceptions.filter((item) => item.status === "open"),
+    () => data.exceptions.filter((item) => item.status === "open" || item.status === "unresolved"),
     [data.exceptions],
   );
   const [selectedId, setSelectedId] = useState(open[0]?.id ?? null);
@@ -65,7 +65,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
       <section>
         <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">Human approval</p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">
-          {open.length} open {open.length === 1 ? "case" : "cases"}
+          {open.length} actionable {open.length === 1 ? "case" : "cases"}
         </h2>
         {error ? <p className="mt-2 text-sm text-destructive">{error}</p> : null}
       </section>
@@ -103,7 +103,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
           />
         </div>
       ) : (
-        <p className="border border-border bg-card p-6 text-sm text-muted-foreground">No open review cases.</p>
+        <p className="border border-border bg-card p-6 text-sm text-muted-foreground">No actionable review cases.</p>
       )}
 
       <section className="flex flex-col gap-3">
@@ -129,7 +129,7 @@ export function ReviewQueue({ data }: { data: Snapshot }) {
   );
 }
 
-function CaseCard({
+export function CaseCard({
   exception,
   index,
   total,
