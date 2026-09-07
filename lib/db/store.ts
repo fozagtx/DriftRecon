@@ -178,6 +178,7 @@ export async function saveReviewOutcome(
   exception: ExceptionRecord,
   edge: MatchEdge | undefined,
   action: HumanDecision["action"],
+  policyId?: string,
 ): Promise<void> {
   await upsertRow("exceptions", exception.id, {
     ...exception,
@@ -187,6 +188,7 @@ export async function saveReviewOutcome(
     await upsertRow("edges", edge.id, {
       ...edge,
       status: action === "approve" ? "approved" : "rejected",
+      ...(action === "approve" && policyId !== undefined ? { policyId } : {}),
     });
   }
 }
