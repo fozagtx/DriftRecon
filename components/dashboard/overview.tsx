@@ -81,9 +81,7 @@ export function Overview({ data }: { data: Snapshot }) {
               <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Human approval</p>
               <p className="mt-2 text-3xl font-semibold tabular-nums">{hasRun ? openReviews : "—"}</p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">{hasRun ? "Cases need a human decision before they can become approved policies." : "Run reconciliation to generate review cases."}</p>
-              <Link href="/review" className={`mt-6 inline-flex min-h-10 items-center justify-between border-t border-black/10 pt-4 text-sm font-medium ${!hasRun ? "pointer-events-none text-muted-foreground" : ""}`} aria-disabled={!hasRun}>
-                Open review queue <ArrowRight className="h-4 w-4" />
-              </Link>
+              <ReviewQueueLink hasRun={hasRun} />
             </aside>
           </section>
 
@@ -91,6 +89,26 @@ export function Overview({ data }: { data: Snapshot }) {
           <div className="max-w-xl"><ImportPanel canReconcile={false} showSources={false} /></div>
         </>
       )}
+    </div>
+  );
+}
+
+export function ReviewQueueLink({ hasRun }: { hasRun: boolean }) {
+  const content = (
+    <>
+      <span>Open review queue</span>
+      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+    </>
+  );
+  const className = "mt-6 inline-flex min-h-10 items-center justify-between border-t border-black/10 pt-4 text-sm font-medium";
+
+  return hasRun ? (
+    <Link href="/review" className={className}>
+      {content}
+    </Link>
+  ) : (
+    <div className={`${className} text-muted-foreground`} aria-disabled="true">
+      {content}
     </div>
   );
 }
