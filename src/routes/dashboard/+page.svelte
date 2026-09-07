@@ -26,7 +26,7 @@
    <div>
     <h1>Overview</h1>
    </div>
-   <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Update available' : d.run ? 'Ledger current' : 'Awaiting first run'}</span>
+   <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
   </header>
   <section>
    <div class="section-head"><h2>Import</h2>{#if has}<span>{d.events.length} events ready</span>{/if}</div>
@@ -37,10 +37,10 @@
    <section>
     <div class="section-head"><h2>Ledger</h2><span>USD</span></div>
     <div class="metrics card">
-     <article><span>Financial value</span><strong>{money(d.overview.totalFinancialValue)}</strong></article>
+     <article><span>Value</span><strong>{money(d.overview.totalFinancialValue)}</strong></article>
      <article><span>Reconciled</span><strong>{d.run ? money(d.overview.reconciledValue) : '—'}</strong></article>
      <article><span>Unresolved</span><strong>{d.run ? money(d.overview.unresolvedValue) : '—'}</strong></article>
-     <article><span>Autonomous coverage</span><strong>{d.run ? pct(d.overview.autonomousCoverage) : '—'}</strong></article>
+     <article><span>Coverage</span><strong>{d.run ? pct(d.overview.autonomousCoverage) : '—'}</strong></article>
      <div class="counts">
       <p><RefreshCw/> Transactions <b>{d.overview.transactionCount}</b></p>
       <p><Landmark/> Payouts <b>{d.overview.payoutCount}</b></p>
@@ -69,7 +69,7 @@
      <ClipboardCheck size={21}/>
      <span>Review</span>
      <strong>{d.run ? d.exceptions.filter((x: any) => x.status === 'open').length : '—'}</strong>
-     <p>{d.run ? 'Open cases' : 'Run reconciliation first'}</p>
+     <p>{d.run ? 'Open cases' : 'Run first'}</p>
      {#if d.run}<a href="/review">Open review <ArrowRight size={15}/></a>{:else}<div>Open review <ArrowRight size={15}/></div>{/if}
     </aside>
    </section>
