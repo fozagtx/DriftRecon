@@ -23,12 +23,11 @@
 <Shell>
  <div class="dashboard">
   <header class="page-head">
-   <div class="title-row">
-    <h1>Overview</h1>
-    <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
-   </div>
-   <ImportPanel canReconcile={has}/>
+   <h1>Overview</h1>
+   <span class="status-pill"><i class:amber={stale}></i>{stale ? 'Stale' : d.run ? 'Current' : 'Idle'}</span>
   </header>
+  <p class="hint">Upload <code>data/judges-test.json</code> on Overview.</p>
+  <ImportPanel canReconcile={has}/>
   <div class="metrics card">
    <article><span>Value</span><strong>{has ? money(d.overview.totalFinancialValue) : '—'}</strong></article>
    <article><span>Reconciled</span><strong>{d.run ? money(d.overview.reconciledValue) : '—'}</strong></article>
@@ -67,8 +66,8 @@
 </Shell>
 <style>
  .dashboard{display:flex;flex-direction:column;gap:16px;width:100%}
- .dashboard .page-head{align-items:center}
- .title-row{display:flex;align-items:center;gap:12px;min-width:0}
+ .hint{margin:0;color:var(--muted);font-size:13px}
+ .hint code{font:12px 'IBM Plex Mono';background:#efefe8;padding:1px 5px;border-radius:4px}
  .status-pill i.amber{background:var(--amber)}
  .metrics{display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden}
  .metrics article{padding:16px;border-right:1px solid var(--line)}

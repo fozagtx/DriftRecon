@@ -7,27 +7,27 @@
  function upload(files:FileList|null){if(!files?.length)return;const form=new FormData();for(const f of files)form.append('files',f);void submit(form)}
  async function run(){state='running';error='';try{const r=await fetch('/api/reconcile',{method:'POST'});if(!r.ok)throw new Error('Reconciliation failed');state='idle';imported=null;await invalidateAll()}catch(e){error=e instanceof Error?e.message:'Reconciliation failed';state='error'}}
 </script>
-<div class="wrap">
- <div class="bar" class:dragging>
-  <label ondragenter={(e)=>{e.preventDefault();dragging=true}} ondragover={(e)=>e.preventDefault()} ondragleave={()=>dragging=false} ondrop={(e)=>{e.preventDefault();dragging=false;upload(e.dataTransfer?.files??null)}}>
-   <Upload size={15}/>
-   <span>{state==='uploading'?'Importing…':'Upload'}</span>
-   <input aria-label="Upload source files" type="file" accept=".csv,.json" multiple onchange={(e)=>{upload(e.currentTarget.files);e.currentTarget.value=''}}/>
-  </label>
-  {#if !redirect}<button class="btn" onclick={run} disabled={!canReconcile||state==='running'}><span class:spin={state==='running'}><RefreshCw size={14}/></span>{state==='running'?'Reconciling…':'Run'}</button>{/if}
- </div>
+<div class="import">
+ <label class="drop" class:dragging ondragenter={(e)=>{e.preventDefault();dragging=true}} ondragover={(e)=>e.preventDefault()} ondragleave={()=>dragging=false} ondrop={(e)=>{e.preventDefault();dragging=false;upload(e.dataTransfer?.files??null)}}>
+  <Upload size={22}/>
+  <b>{state==='uploading'?'Importing…':'Drop files here'}</b>
+  <span>or click to choose</span>
+  <input aria-label="Upload source files" type="file" accept=".csv,.json" multiple onchange={(e)=>{upload(e.currentTarget.files);e.currentTarget.value=''}}/>
+ </label>
+ {#if !redirect}<button class="btn" onclick={run} disabled={!canReconcile||state==='running'}><span class:spin={state==='running'}><RefreshCw size={14}/></span>{state==='running'?'Reconciling…':'Run'}</button>{/if}
  {#if imported!==null}<p class="notice good"><CheckCircle2 size={14}/>{imported} imported</p>{/if}
  {#if error}<p class="notice bad">{error}</p>{/if}
 </div>
 <style>
- .wrap{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
- .bar{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%}
- .bar.dragging label{border-color:var(--brand);background:#f5f8f1}
- .bar label{position:relative;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:12px;font-weight:650;cursor:pointer;white-space:nowrap}
- .bar input{position:absolute;width:1px;height:1px;padding:0;border:0;overflow:hidden;clip:rect(0,0,0,0)}
- .bar .btn{min-height:36px;padding:0 14px;font-size:12px}
- .notice{margin:0;font-size:12px;display:flex;align-items:center;gap:6px}
+ .import{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+ .drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:28px 16px;border:1px dashed var(--line);border-radius:10px;background:#fff;cursor:pointer;text-align:center}
+ .drop.dragging{border-color:var(--brand);background:#f5f8f1}
+ .drop b{font-size:14px;font-weight:650}
+ .drop span{font-size:12px;color:var(--muted)}
+ .drop input{position:absolute;width:1px;height:1px;padding:0;border:0;overflow:hidden;clip:rect(0,0,0,0)}
+ .import .btn{min-height:42px;padding:0 16px;font-size:13px}
+ .notice{grid-column:1/-1;margin:0;font-size:12px;display:flex;align-items:center;gap:6px}
  .spin{display:inline-flex;animation:spin 1s linear infinite}
  @keyframes spin{to{transform:rotate(360deg)}}
- @media(max-width:700px){.wrap,.bar{align-items:stretch;width:100%}.bar{flex-wrap:wrap}.bar label,.bar .btn{flex:1 1 auto;justify-content:center}}
+ @media(max-width:700px){.import{grid-template-columns:1fr}.import .btn{width:100%;justify-content:center}}
 </style>
