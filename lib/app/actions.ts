@@ -32,6 +32,7 @@ import { overviewMetrics } from "../reconciliation/overview";
 import { runReconciliation } from "../reconciliation/pipeline";
 import { validatePayout } from "../reconciliation/invariants";
 import type { ExceptionRecord, GroundTruthEdge, ImportResult, LedgerEvent, MatchEdge, Source } from "../types";
+import { ReviewExceptionConflictError } from "./errors";
 import { z } from "zod";
 
 const groundTruthSchema = z.array(
@@ -219,6 +220,9 @@ export async function reviewException(exceptionId: string, action: "approve" | "
   const exceptions = await listExceptions();
   const exception = exceptions.find((item) => item.id === exceptionId);
   if (!exception) throw new Error("Exception not found");
+  if (exception.status === "approved" || exception.status === "rejected") {
+    throw new ReviewExceptionConflictError(exception.id, exception.status);
+  }
 
   const decidedAt = new Date().toISOString();
   const edge = pickEdge(exception, edges);
