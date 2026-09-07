@@ -10,11 +10,11 @@ DriftRecon imports those CSVs into one ledger, traces each sale through fees, re
 
 The check is the live app. Download these CSVs, drop them on Overview, click **Run**:
 
-- [stripe.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/stripe.csv)
-- [gumroad.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/gumroad.csv)
-- [bank.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/bank.csv)
-- [dodo.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/dodo.csv)
-- [ground-truth.csv](https://github.com/fozagtx/DriftRecon/raw/main/data/ground-truth.csv) — Evaluation only, never used during matching
+- [data/stripe.csv](data/stripe.csv)
+- [data/gumroad.csv](data/gumroad.csv)
+- [data/bank.csv](data/bank.csv)
+- [data/dodo.csv](data/dodo.csv)
+- [data/ground-truth.csv](data/ground-truth.csv) — Evaluation only, never used during matching
 
 Graph, Review, and Evaluation use that same import. There is no in-app sample button.
 
