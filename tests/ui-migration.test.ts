@@ -25,6 +25,14 @@ describe('SvelteKit interface', () => {
     expect(readFileSync('src/routes/review/+page.svelte', 'utf8')).toContain('Agent tools');
   });
 
+  it('keeps a landing hero above Open workspace', () => {
+    const landing = readFileSync('src/routes/+page.svelte', 'utf8');
+    expect(landing).toContain('class="hero"');
+    expect(landing).toContain('Close the books.');
+    expect(landing).toContain('Open workspace');
+    expect(landing).toContain('/logos/stripe.svg');
+  });
+
   it('provides accessible controls for the interactive money map', () => {
     const graph = readFileSync('src/routes/graph/+page.svelte', 'utf8');
     expect(graph).toContain('aria-label="Zoom in"');
