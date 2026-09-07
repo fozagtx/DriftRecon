@@ -14,6 +14,7 @@ const store = vi.hoisted(() => ({
   loadGroundTruth: vi.fn(),
   replaceEvents: vi.fn(),
   replaceGraph: vi.fn(),
+  restoreRunArchive: vi.fn(),
   saveDecision: vi.fn(),
   saveGroundTruth: vi.fn(),
   savePolicy: vi.fn(),
@@ -23,7 +24,7 @@ const store = vi.hoisted(() => ({
 
 vi.mock("../lib/db/store", () => store);
 
-import { reviewException } from "../lib/app/actions";
+import { activateRun, reviewException } from "../lib/app/actions";
 
 const edge: MatchEdge = {
   id: "edge-1",
@@ -94,5 +95,29 @@ describe("reviewException", () => {
     expect(store.savePolicy).not.toHaveBeenCalled();
     expect(store.saveDecision).toHaveBeenCalledWith(expect.objectContaining({ policyId: undefined }));
     expect(store.saveReviewOutcome).toHaveBeenCalledWith(exception, edge, "reject", undefined);
+  });
+});
+
+describe("activateRun", () => {
+  it("restores the archived graph for a stored run", async () => {
+    store.restoreRunArchive.mockResolvedValue(true);
+    store.listEvents.mockResolvedValue(events);
+    store.listEdges.mockResolvedValue([edge]);
+    store.listExceptions.mockResolvedValue([exception]);
+    store.listPolicies.mockResolvedValue([]);
+    store.listInvalidRows.mockResolvedValue([]);
+    store.listDecisions.mockResolvedValue([]);
+    store.listRuns.mockResolvedValue([]);
+    store.latestRun.mockResolvedValue(null);
+    store.loadGroundTruth.mockResolvedValue([]);
+
+    await activateRun("run-1");
+
+    expect(store.restoreRunArchive).toHaveBeenCalledWith("run-1");
+  });
+
+  it("rejects a run with no stored graph", async () => {
+    store.restoreRunArchive.mockResolvedValue(false);
+    await expect(activateRun("missing")).rejects.toThrow(/no stored graph/);
   });
 });

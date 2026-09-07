@@ -16,7 +16,7 @@ The check is the live app. Download these CSVs, drop them on Overview, click **R
 - [data/dodo.csv](data/dodo.csv)
 - [data/ground-truth.csv](data/ground-truth.csv) — Evaluation only, never used during matching
 
-Graph, Review, and Evaluation use that same import. There is no in-app sample button.
+Graph, Review, and Evaluation use that same import. There is no in-app sample button. Each Run is stored on **Runs**; Open loads that graph again instead of throwing it away. The Recon Agent writes a recommendation and tool list on every Review case.
 
 ## What it does
 

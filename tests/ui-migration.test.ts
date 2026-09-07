@@ -13,7 +13,16 @@ describe('SvelteKit interface', () => {
   it('keeps a non-navigable review action before reconciliation', () => {
     const overview = readFileSync('src/routes/dashboard/+page.svelte', 'utf8');
     expect(overview).toContain('{#if d.run}<a href="/review"');
-    expect(overview).toContain('{:else}<div>Open');
+    expect(overview).toContain('{:else}<div>Review');
+    expect(overview).toContain('Recon Agent');
+    expect(overview).toContain('href="/runs"');
+  });
+
+  it('stores past runs on a clickable Runs page', () => {
+    const runs = readFileSync('src/routes/runs/+page.svelte', 'utf8');
+    expect(runs).toContain('/api/runs/activate');
+    expect(runs).toContain('Open');
+    expect(readFileSync('src/routes/review/+page.svelte', 'utf8')).toContain('Agent tools');
   });
 
   it('provides accessible controls for the interactive money map', () => {

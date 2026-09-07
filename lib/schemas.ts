@@ -56,5 +56,9 @@ export const reviewActionSchema = z.object({
   action: z.enum(["approve", "reject", "unresolved"]),
 });
 
+export const activateRunSchema = z.object({
+  runId: z.string().min(1),
+});
+
 export const exceptionTypeSchema = z.enum(EXCEPTION_TYPES);
 export const exceptionStatusSchema = z.enum(EXCEPTION_STATUSES);

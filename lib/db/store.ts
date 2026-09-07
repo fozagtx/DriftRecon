@@ -9,6 +9,7 @@ import type {
   MatchEdge,
   ReconciliationPolicy,
   ReconciliationRun,
+  RunArchive,
 } from "../types";
 
 type Sql = NeonQueryFunction<false, false>;
@@ -42,6 +43,7 @@ async function ensureSchema(): Promise<Sql> {
   await client`CREATE TABLE IF NOT EXISTS policies (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
   await client`CREATE TABLE IF NOT EXISTS decisions (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
   await client`CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
+  await client`CREATE TABLE IF NOT EXISTS run_archives (id TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
   await client`CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, payload JSONB NOT NULL)`;
   schemaReady = true;
   return client;
@@ -102,6 +104,9 @@ async function upsertRow(table: string, id: string, payload: unknown): Promise<v
     case "runs":
       await client`INSERT INTO runs (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
       return;
+    case "run_archives":
+      await client`INSERT INTO run_archives (id, payload) VALUES (${id}, ${body}) ON CONFLICT (id) DO UPDATE SET payload = EXCLUDED.payload`;
+      return;
     default:
       throw new Error(`Unknown table ${table}`);
   }
@@ -141,12 +146,52 @@ export async function upsertEvent(event: LedgerEvent): Promise<void> {
   await upsertRow("events", event.id, event);
 }
 
+async function setLatestRun(run: ReconciliationRun): Promise<void> {
+  const client = await ensureSchema();
+  await client`INSERT INTO meta (key, payload) VALUES ('latest_run', ${run as unknown as Record<string, unknown>}) ON CONFLICT (key) DO UPDATE SET payload = EXCLUDED.payload`;
+}
+
+async function saveRunArchive(archive: RunArchive): Promise<void> {
+  const run: ReconciliationRun = { ...archive.run, archived: true };
+  await upsertRow("run_archives", run.id, { ...archive, run });
+  await upsertRow("runs", run.id, run);
+}
+
 export async function replaceGraph(edges: MatchEdge[], exceptions: ExceptionRecord[], run: ReconciliationRun): Promise<void> {
   await writeAll("edges", edges);
   await writeAll("exceptions", exceptions);
-  await upsertRow("runs", run.id, run);
+  await saveRunArchive({
+    run,
+    events: await listEvents(),
+    invalidRows: await listInvalidRows(),
+    edges,
+    exceptions,
+    policies: await listPolicies(),
+    decisions: await listDecisions(),
+    groundTruth: await loadGroundTruth(),
+  });
+  await setLatestRun({ ...run, archived: true });
+}
+
+export async function restoreRunArchive(runId: string): Promise<boolean> {
   const client = await ensureSchema();
-  await client`INSERT INTO meta (key, payload) VALUES ('latest_run', ${run as unknown as Record<string, unknown>}) ON CONFLICT (key) DO UPDATE SET payload = EXCLUDED.payload`;
+  const rows = await client`SELECT payload FROM run_archives WHERE id = ${runId}`;
+  const archive = rows[0]?.payload as RunArchive | undefined;
+  if (!archive?.run) return false;
+  await writeAll("events", archive.events ?? []);
+  await writeAll("invalid_rows", archive.invalidRows ?? []);
+  await writeAll("edges", archive.edges ?? []);
+  await writeAll("exceptions", archive.exceptions ?? []);
+  await writeAll("policies", archive.policies ?? []);
+  await writeAll("decisions", archive.decisions ?? []);
+  if (archive.groundTruth?.length) {
+    await saveGroundTruth(archive.groundTruth);
+  } else {
+    await client`DELETE FROM meta WHERE key = ${"ground_truth"}`;
+  }
+  await upsertRow("runs", archive.run.id, { ...archive.run, archived: true });
+  await setLatestRun(archive.run);
+  return true;
 }
 
 export async function listEdges(): Promise<MatchEdge[]> {
