@@ -8,19 +8,13 @@ Autonomous Office of the CFO. Core rule: code calculates, the Recon Agent invest
 
 ## For judges
 
-Download the pack (Stripe, Dodo Payments, Gumroad, bank, and ground truth in one file):
+The check is the live app. Download this pack and upload it on Overview:
 
 **[data/judges-test.json](https://github.com/fozagtx/DriftRecon/raw/main/data/judges-test.json)**
 
-Right-click → Save as, or open that link. Then on Overview drop the file onto **Drop files here** and click **Run**.
+That file is Stripe, Dodo Payments, Gumroad, bank, and ground truth together. Drop it on **Drop files here**, then click **Run**. Graph, Review, and Evaluation use that same imported data.
 
 There is no in-app “load sample” button.
-
-Automated check (no database):
-
-```bash
-npx vitest run tests/judges.test.ts
-```
 
 ## What it does
 
